@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>MEDIA KITA TV</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin:0;
+  background:#0b0b0b;
+  color:#eaeaea;
+  font-family:'Poppins', sans-serif;
+  overflow:hidden;
+}
+
+header {
+  display:flex;
+  justify-content:space-between;
+  padding:20px 40px;
+  background:#111;
+  border-bottom:1px solid #222;
+}
+
+.main {
+  display:flex;
+  height:90vh;
+}
+
+.left {
+  width:35%;
+  padding:30px;
+  border-right:1px solid #222;
+}
+
+.highlight-title {
+  font-size:22px;
+  color:#ff7a00;
+  font-weight:600;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+
+.highlight-box {
+  margin-top:20px;
+  padding:25px;
+  background:#111;
+  border:1px solid #222;
+  transition: opacity 0.5s ease;
+}
+
+.right {
+  width:65%;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+}
+
+.table-header {
+  display:grid;
+  grid-template-columns: 1fr 2fr 1.5fr 2fr;
+  padding:14px;
+  font-size:16px;
+  color:#aaa;
+  background:#0b0b0b;
+  border-bottom:1px solid #222;
+}
+
+#scrollWrapper {
+  flex:1;
+  overflow:hidden;
+  position:relative;
+}
+
+#scrollContent {
+  position:absolute;
+  width:100%;
+}
+
+.row {
+  display:grid;
+  grid-template-columns: 1fr 2fr 1.5fr 2fr;
+  padding:14px;
+  margin-bottom:6px;
+  background:#111;
+}
+
+.row div:nth-child(2){
+  color:#ff7a00;
+}
+
+.month {
+  color:#ff7a00;
+  font-weight:bold;
+  padding:10px 0;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div style="display:flex; align-items:center; gap:14px;">
+    <img src="https://raw.githubusercontent.com/mediakitaproductions/imageapp/555c0fffa480ce0dc7d5f422ddd117123511b742/mkp-logo-white-title.png" 
+         style="height:34px; object-fit:contain;">
+    <div style="font-weight:600; letter-spacing:1px;">
+      MEDIA KITA SCHEDULE
+    </div>
+  </div>
+  <div id="clock"></div>
+</header>
+
+<div class="main">
+
+  <div class="left">
+    <div class="highlight-title">EVENT TERDEKAT</div>
+    <div id="highlight" class="highlight-box"></div>
+  </div>
+
+  <div class="right">
+
+    <div class="table-header">
+      <div>📅 TANGGAL</div>
+      <div>🎬 EVENT</div>
+      <div>🏢 KLIEN</div>
+      <div>📍 LOKASI</div>
+    </div>
+
+    <div id="scrollWrapper">
+      <div id="scrollContent"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+const apiURL = "https://script.google.com/macros/s/AKfycbxRLGXgLuH1Wt6isqes6Cp5pWEu-G5yNO93U8sISMLpOBjXpxt-RbI5CpD73xXf0Qar/exec";
+
+let y = 0;
+let events = [];
+let highlightIndex = 0;
+
+function safe(v){ return v || "-"; }
+
+function showIf(v){
+  return (v && v !== "-" && v !== "") ? v : null;
+}
+
+function formatDate(v){
+  return new Date(v).toLocaleDateString("id-ID",{day:"numeric",month:"short"});
+}
+
+function getMonthLabel(d){
+  return new Date(d).toLocaleDateString("id-ID",{month:"long",year:"numeric"});
+}
+
+function parseDate(v){
+  return v ? new Date(v) : new Date(0);
+}
+
+/* SCROLL */
+function startScroll(){
+  const el = document.getElementById("scrollContent");
+  let speed = 0.3;
+
+  function animate(){
+    y -= speed;
+    el.style.transform = `translateY(${y}px)`;
+
+    if(Math.abs(y) >= el.scrollHeight / 2){
+      y = 0;
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+}
+
+/* HIGHLIGHT */
+function renderHighlight(e){
+
+  const catatan = showIf(e.Catatan || e.CATATAN);
+  const kebutuhan = showIf(e.Kebutuhan || e.KEBUTUHAN);
+
+  return `
+    <div style="font-size:20px; font-weight:700; color:#ff7a00; margin-bottom:8px;">
+      🎬 ${safe(e.Nama_Event)}
+    </div>
+    <div>📅 ${formatDate(e.Tanggal_Mulai)}</div>
+    <div>📍 ${safe(e.Lokasi)}</div>
+    
+    ${catatan ? `<div>📝 ${catatan}</div>` : ""}
+    ${kebutuhan ? `<div>🧰 ${kebutuhan}</div>` : ""}
+  `;
+}
+
+function rotateHighlight(){
+  const box = document.getElementById("highlight");
+
+  box.style.opacity = 0;
+
+  setTimeout(()=>{
+    highlightIndex++;
+
+    if(highlightIndex >= events.length){
+      highlightIndex = 0;
+    }
+
+    box.innerHTML = renderHighlight(events[highlightIndex]);
+    box.style.opacity = 1;
+
+  }, 500);
+}
+
+async function loadData(){
+  const res = await fetch(apiURL);
+  const data = await res.json();
+
+  events = data.sort((a, b) => parseDate(a.Tanggal_Mulai) - parseDate(b.Tanggal_Mulai));
+
+  highlightIndex = events.findIndex(e => new Date(e.Tanggal_Mulai) >= new Date());
+  if(highlightIndex === -1) highlightIndex = 0;
+
+  document.getElementById("highlight").innerHTML = renderHighlight(events[highlightIndex]);
+
+  let html="";
+  let lastMonth="";
+
+  events.forEach(row=>{
+    let month = getMonthLabel(row.Tanggal_Mulai);
+
+    if(month !== lastMonth){
+      html += `<div class="month">${month}</div>`;
+      lastMonth = month;
+    }
+
+    html += `
+    <div class="row">
+      <div>${formatDate(row.Tanggal_Mulai)}</div>
+      <div>${safe(row.Nama_Event)}</div>
+      <div>${safe(row.Client_ID)}</div>
+      <div>${safe(row.Lokasi)}</div>
+    </div>`;
+  });
+
+  document.getElementById("scrollContent").innerHTML = html + html;
+
+  startScroll();
+
+  setInterval(rotateHighlight, 6000);
+}
+
+/* CLOCK */
+setInterval(()=>{
+  document.getElementById("clock").innerText =
+    new Date().toLocaleTimeString();
+},1000);
+
+loadData();
+
+</script>
+
+</body>
+</html>
