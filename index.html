@@ -398,19 +398,27 @@ async function loadCrew(){
 
 /* DISPLAY CREW WITH ERROR HANDLING */
 function displayCrew(index){
-  const img = document.getElementById("crewImage");
+  const imgEl = document.getElementById("crewImage");
   const nameEl = document.getElementById("crewName");
-  
+
   if(index >= crew.length) index = 0;
-  
+
   const current = crew[index];
-  nameEl.innerText = current.name;
-  
-  img.onerror = () => {
-    console.warn(`Foto gagal dimuat: ${current.name}, mencoba gambar berikutnya...`);
+
+  const tempImg = new Image();
+  tempImg.src = current.foto;
+
+  tempImg.onload = () => {
+    nameEl.innerText = current.name;
+    imgEl.src = current.foto;
+  };
+
+  tempImg.onerror = () => {
+    console.warn(`Foto gagal: ${current.name}`);
     crewIndex = (crewIndex + 1) % crew.length;
     displayCrew(crewIndex);
   };
+}
   
   img.src = current.foto;
 }
