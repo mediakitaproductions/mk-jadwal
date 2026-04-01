@@ -199,11 +199,13 @@ header {
 <script>
 const apiURL = "https://script.google.com/macros/s/AKfycbxRLGXgLuH1Wt6isqes6Cp5pWEu-G5yNO93U8sISMLpOBjXpxt-RbI5CpD73xXf0Qar/exec";
 
+/* =========================
+   CREW (NETFLIX STYLE)
+========================= */
 let crew = [];
 let crewIndex = 0;
 let activeLayer = "A";
 
-/* LOAD CREW */
 async function loadCrew(){
   const res = await fetch("https://api.github.com/repos/mediakitaproductions/foto-tim-mk/contents/");
   const data = await res.json();
@@ -224,7 +226,6 @@ async function loadCrew(){
   }
 }
 
-/* DISPLAY NETFLIX */
 function displayCrew(index){
   const imgA = document.getElementById("crewImageA");
   const imgB = document.getElementById("crewImageB");
@@ -262,26 +263,117 @@ function displayCrew(index){
   };
 }
 
-/* ROTATE */
 function rotateCrew(){
   crewIndex = (crewIndex + 1) % crew.length;
   displayCrew(crewIndex);
   preloadNext();
 }
 
-/* PRELOAD NEXT */
 function preloadNext(){
   const next = crew[(crewIndex + 1) % crew.length];
   const img = new Image();
   img.src = next.foto;
 }
 
-/* CLOCK */
+/* =========================
+   SCHEDULE SYSTEM (FIXED)
+========================= */
+
+let y = 0;
+let events = [];
+let highlightEvents = [];
+let highlightIndex = 0;
+
+function safe(v){ return v || "-"; }
+
+function formatDate(v){
+  let d = new Date(v);
+  return d.toLocaleDateString("id-ID",{day:"2-digit",month:"short"});
+}
+
+function parseDate(v){
+  return v ? new Date(v) : new Date(0);
+}
+
+function isPast(event){
+  const now = new Date();
+  const end = event.Tanggal_Selesai ? parseDate(event.Tanggal_Selesai) : parseDate(event.Tanggal_Mulai);
+  return end < now;
+}
+
+function startScroll(){
+  const el = document.getElementById("scrollContent");
+  function animate(){
+    y -= 0.3;
+    el.style.transform = `translateY(${y}px)`;
+    if(Math.abs(y) >= el.scrollHeight / 2){ y = 0; }
+    requestAnimationFrame(animate);
+  }
+  animate();
+}
+
+function renderHighlight(e){
+  return `
+    <div>${safe(e.Nama_Event)}</div>
+    <div>${safe(e.Client_ID)}</div>
+    <div>${safe(e.Lokasi)}</div>
+  `;
+}
+
+function rotateHighlight(){
+  const box = document.getElementById("highlight");
+  if(!highlightEvents.length) return;
+
+  box.style.opacity = 0;
+  setTimeout(()=>{
+    highlightIndex = (highlightIndex + 1) % highlightEvents.length;
+    box.innerHTML = renderHighlight(highlightEvents[highlightIndex]);
+    box.style.opacity = 1;
+  }, 400);
+}
+
+function generateTableHTML(events){
+  let html = "";
+  events.forEach(row => {
+    html += `
+    <div class="row ${isPast(row) ? 'past-row' : ''}">
+      <div>${formatDate(row.Tanggal_Mulai)}</div>
+      <div>${safe(row.Nama_Event)}</div>
+      <div>${safe(row.Client_ID)}</div>
+      <div>${safe(row.Lokasi)}</div>
+    </div>`;
+  });
+  return html;
+}
+
+async function loadData(){
+  const res = await fetch(apiURL);
+  const data = await res.json();
+
+  events = data.sort((a,b)=> parseDate(a.Tanggal_Mulai)-parseDate(b.Tanggal_Mulai));
+  highlightEvents = events.filter(e => !isPast(e));
+
+  if(highlightEvents.length){
+    document.getElementById("highlight").innerHTML = renderHighlight(highlightEvents[0]);
+  }
+
+  let html = generateTableHTML(events);
+  document.getElementById("scrollContent").innerHTML = html + html;
+
+  startScroll();
+  setInterval(rotateHighlight, 15000);
+}
+
+/* =========================
+   INIT
+========================= */
+
 setInterval(()=>{
   document.getElementById("clock").innerText = new Date().toLocaleTimeString();
 },1000);
 
 loadCrew();
+loadData();
 </script>
 
 </body>
