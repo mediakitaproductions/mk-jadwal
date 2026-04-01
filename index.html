@@ -4,69 +4,143 @@
 <meta charset="UTF-8">
 <title>MEDIA KITA TV</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
 <style>
+* { box-sizing: border-box; }
+
+html, body { height:100%; }
+
 body {
   margin:0;
-  background:#0b0b0b;
+  background:#050505;
   color:#eaeaea;
-  font-family:'Poppins', sans-serif;
+  font-family:'Share Tech Mono', monospace;
   overflow:hidden;
+  letter-spacing:1px;
 }
 
+/* HEADER */
 header {
   display:flex;
   justify-content:space-between;
-  padding:20px 40px;
-  background:#111;
-  border-bottom:1px solid #222;
+  align-items:center;
+  height:80px;
+  padding:0 40px;
+  background:#000;
+  border-bottom:2px solid #ff7a00;
 }
 
-.main {
-  display:flex;
-  height:90vh;
-}
-
-.left {
-  width:35%;
-  padding:30px;
-  border-right:1px solid #222;
-}
-
-.highlight-title {
-  font-size:22px;
+.title {
+  font-size:34px;
+  font-weight:700;
+  letter-spacing:4px;
   color:#ff7a00;
-  font-weight:600;
-  letter-spacing:1px;
   text-transform:uppercase;
 }
 
-.highlight-box {
-  margin-top:20px;
-  padding:25px;
-  background:#111;
-  border:1px solid #222;
-  transition: opacity 0.5s ease;
+#clock {
+  font-size:22px;
+  color:#ffaa33;
 }
 
-.right {
-  width:65%;
+/* LAYOUT */
+.main {
+  display:flex;
+  height:calc(100vh - 80px);
+}
+
+/* LEFT */
+.left {
+  width:28%;
+  min-width:300px;
+  max-width:420px;
   padding:20px;
+  border-right:1px solid #222;
   display:flex;
   flex-direction:column;
+  position:relative;   /* WAJIB */
+  height:100%;         /* WAJIB */
 }
 
-.table-header {
-  display:grid;
-  grid-template-columns: 1fr 2fr 1.5fr 2fr;
-  padding:14px;
+.highlight-title {
+  font-size:24px;
+  color:#ff7a00;
+  margin-bottom:20px;
+}
+
+.highlight-box {
+  padding:18px;
+  background:#000;
+  border:1px solid #ff7a00;
   font-size:16px;
-  color:#aaa;
-  background:#0b0b0b;
-  border-bottom:1px solid #222;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  transition: all 0.6s ease;
 }
 
+/* RIGHT */
+.right {
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+
+/* GRID */
+.table-header,
+.row {
+  display:grid;
+  grid-template-columns: 100px 2.2fr 1.3fr 1.6fr;
+}
+
+/* HEADER TABLE */
+.table-header {
+  height:50px;
+  font-size:16px;
+  font-weight:700;
+  color:#ff7a00;
+  background:#111;
+  letter-spacing:1px;
+}
+
+.gate-icon {
+  width:3px;
+  height:20px;
+  background:linear-gradient(to bottom, #ff7a00, #ffaa33);
+  margin-right:12px;
+  display:inline-block;
+}
+
+.table-header div,
+.row div {
+  justify-content:flex-start;
+  display:flex;
+  align-items:center;
+  padding:0 8px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  position: relative;
+}
+
+.table-header div:not(:last-child)::after,
+.row div:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 15%;
+  height: 70%;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, rgba(255,122,0,0.4), transparent);
+}
+
+.table-header div:nth-child(2),
+.row div:nth-child(2) {
+  padding-left:4px;
+}
+/* SCROLL */
 #scrollWrapper {
   flex:1;
   overflow:hidden;
@@ -78,22 +152,150 @@ header {
   width:100%;
 }
 
+/* ROW */
 .row {
-  display:grid;
-  grid-template-columns: 1fr 2fr 1.5fr 2fr;
-  padding:14px;
-  margin-bottom:6px;
-  background:#111;
+  height:52px;
+  font-size:24px;
+  text-transform:uppercase;
+  background-color:#050505;
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.12) 1px, transparent 1px);
+  background-size: 3px 3px;
+  box-shadow: inset 0 0 8px rgba(255,122,0,0.15);
 }
 
-.row div:nth-child(2){
-  color:#ff7a00;
+/* PERBAIKI JARAK HURUF ISI DATA */
+.row div {
+  letter-spacing:0.3px;
+  border-right: 1px solid rgba(255,122,0,0.2);
 }
 
+.row div:last-child {
+  border-right: none;
+}
+
+.row:nth-child(odd){ background-color:#050505; }
+.row:nth-child(even){ background-color:#0a0a0a; }
+
+.row div:nth-child(2){ color:#ff7a00; }
+.row div:nth-child(4){ color:#ff7a00; }
+
+.past-row {
+  background-color: rgba(0, 50, 0, 0.2) !important;
+  color: #00aa00;
+}
+
+.past-row div:nth-child(2),
+.past-row div:nth-child(4) {
+  color: #00aa00;
+}
+
+/* MONTH */
 .month {
+  padding:8px 16px;
+  font-size:18px;
   color:#ff7a00;
-  font-weight:bold;
-  padding:10px 0;
+  background:#0a0a0a;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* HIGHLIGHT */
+.hl-title {
+  font-size:20px;
+  color:#ffaa33;
+  font-weight:700;
+}
+
+.hl-list {
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.hl-list div {
+  display:flex;
+  gap:10px;
+}
+
+.hl-icon {
+  width:20px;
+  color:#ff7a00;
+}
+
+/* CREW */
+.crew-section {
+  position:absolute;
+  bottom:20px;
+  left:20px;
+  right:20px;
+}
+
+.crew-title {
+  font-size:16px;
+  color:#ff7a00;
+  margin-bottom:10px;
+  text-transform:uppercase;
+  font-weight:700;
+}
+.crew-slider {
+  margin-top:10px;
+  border:1px solid #ff7a00;
+  background:#000;
+
+  /* ✨ portrait ratio */
+  aspect-ratio: 3 / 4;
+
+  position:relative;
+  overflow:hidden;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* GAMBAR */
+.crew-slider img {
+  width:100%;
+  height:100%;
+
+  object-fit:contain; /* tidak terpotong */
+  object-position:center;
+
+  transition:opacity 0.8s ease-in-out;
+}
+
+/* NAMA (OVERLAY BAWAH) */
+.crew-name {
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  height:50px;
+  background:rgba(0,0,0,0.85);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#ffaa33;
+  border-top:1px solid #ff7a00;
+  font-size:24px;
+  font-weight:700;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+
+/* OPTIONAL: BIAR LEBIH HIDUP */
+.crew-slider::after {
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  box-shadow: inset 0 0 15px rgba(255,122,0,0.15);
+}
+
+.fade-out {
+  opacity:0;
 }
 </style>
 </head>
@@ -102,11 +304,8 @@ header {
 
 <header>
   <div style="display:flex; align-items:center; gap:14px;">
-    <img src="https://raw.githubusercontent.com/mediakitaproductions/imageapp/555c0fffa480ce0dc7d5f422ddd117123511b742/mkp-logo-white-title.png" 
-         style="height:34px; object-fit:contain;">
-    <div style="font-weight:600; letter-spacing:1px;">
-      MEDIA KITA SCHEDULE
-    </div>
+    <img src="https://raw.githubusercontent.com/mediakitaproductions/imageapp/555c0fffa480ce0dc7d5f422ddd117123511b742/mkp-logo-white-title.png" style="height:34px;">
+    <div class="title">MEDIA KITA SCHEDULE</div>
   </div>
   <div id="clock"></div>
 </header>
@@ -116,15 +315,25 @@ header {
   <div class="left">
     <div class="highlight-title">EVENT TERDEKAT</div>
     <div id="highlight" class="highlight-box"></div>
+
+    <!-- CREW FIX BOTTOM -->
+    <div class="crew-section">
+      <div class="crew-title">OUR CREW</div>
+
+      <div class="crew-slider">
+        <img id="crewImage" src="">
+        <div id="crewName" class="crew-name"></div>
+      </div>
+    </div>
   </div>
 
   <div class="right">
 
     <div class="table-header">
-      <div>📅 TANGGAL</div>
-      <div>🎬 EVENT</div>
-      <div>🏢 KLIEN</div>
-      <div>📍 LOKASI</div>
+      <div><span class="gate-icon"></span>DATE</div>
+      <div><span class="gate-icon"></span>EVENT</div>
+      <div><span class="gate-icon"></span>CLIENT</div>
+      <div><span class="gate-icon"></span>LOCATION</div>
     </div>
 
     <div id="scrollWrapper">
@@ -136,132 +345,277 @@ header {
 </div>
 
 <script>
-
 const apiURL = "https://script.google.com/macros/s/AKfycbxRLGXgLuH1Wt6isqes6Cp5pWEu-G5yNO93U8sISMLpOBjXpxt-RbI5CpD73xXf0Qar/exec";
+
+/* CREW DATA */
+let crew = [];
+
+async function loadCrew(){
+  try {
+    let allFiles = [];
+    let page = 1;
+
+    while(true){
+      const res = await fetch(`https://api.github.com/repos/mediakitaproductions/foto-tim-mk/contents/?per_page=100&page=${page}`);
+      if(!res.ok){
+        throw new Error(`GitHub API error: ${res.status} ${res.statusText}`);
+      }
+
+      const data = await res.json();
+      if(!Array.isArray(data) || data.length === 0){
+        break;
+      }
+
+      allFiles = allFiles.concat(data);
+      if(data.length < 100){
+        break; // no more pages
+      }
+      page++;
+    }
+
+    crew = allFiles
+      .filter(file => file.name && file.name.toLowerCase().endsWith('.png'))
+      .map(file => ({
+        name: file.name.replace(/\.png$/i, '').toUpperCase(),
+        foto: file.download_url
+      }));
+
+    // Shuffle crew for random order
+    crew.sort(() => Math.random() - 0.5);
+
+    console.log("Crew auto loaded:", crew);
+
+    // INIT CREW
+    if(crew.length > 0){
+      displayCrew(0);
+      setInterval(rotateCrew, 5000);
+    }
+
+  } catch(err){
+    console.error("Gagal load crew:", err);
+  }
+}
+
+/* DISPLAY CREW WITH ERROR HANDLING */
+function displayCrew(index){
+  const img = document.getElementById("crewImage");
+  const nameEl = document.getElementById("crewName");
+  
+  if(index >= crew.length) index = 0;
+  
+  const current = crew[index];
+  nameEl.innerText = current.name;
+  
+  img.onerror = () => {
+    console.warn(`Foto gagal dimuat: ${current.name}, mencoba gambar berikutnya...`);
+    crewIndex = (crewIndex + 1) % crew.length;
+    displayCrew(crewIndex);
+  };
+  
+  img.src = current.foto;
+}
+
+let crewIndex = 0;
+
+function rotateCrew(){
+  const img = document.getElementById("crewImage");
+  const nextIndex = (crewIndex + 1) % crew.length;
+  
+  // Fade out current
+  img.classList.add("fade-out");
+  
+  setTimeout(() => {
+    crewIndex = nextIndex;
+    displayCrew(crewIndex);
+    img.classList.remove("fade-out");
+  }, 400);
+}
 
 let y = 0;
 let events = [];
+let highlightEvents = [];
 let highlightIndex = 0;
 
 function safe(v){ return v || "-"; }
 
-function showIf(v){
-  return (v && v !== "-" && v !== "") ? v : null;
-}
-
 function formatDate(v){
-  return new Date(v).toLocaleDateString("id-ID",{day:"numeric",month:"short"});
+  let d = new Date(v);
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = d.toLocaleDateString("id-ID",{month:"short"});
+  return `${day} ${month}`;
 }
 
-function getMonthLabel(d){
-  return new Date(d).toLocaleDateString("id-ID",{month:"long",year:"numeric"});
+function getMonthName(v){
+  let d = new Date(v);
+  return d.toLocaleDateString("id-ID", {month: "long", year: "numeric"});
 }
 
 function parseDate(v){
   return v ? new Date(v) : new Date(0);
 }
 
-/* SCROLL */
+function isPast(event){
+  const now = new Date();
+  const end = event.Tanggal_Selesai ? parseDate(event.Tanggal_Selesai) : parseDate(event.Tanggal_Mulai);
+  return end < now;
+}
+
+function isFutureEvent(event){
+  const now = new Date();
+  const start = parseDate(event.Tanggal_Mulai);
+
+  return start >= new Date(now.getFullYear(), now.getMonth(), 1);
+}
+
 function startScroll(){
   const el = document.getElementById("scrollContent");
-  let speed = 0.3;
-
   function animate(){
-    y -= speed;
+    y -= 0.35;
     el.style.transform = `translateY(${y}px)`;
-
-    if(Math.abs(y) >= el.scrollHeight / 2){
-      y = 0;
-    }
-
+    if(Math.abs(y) >= el.scrollHeight / 2){ y = 0; }
     requestAnimationFrame(animate);
   }
-
   animate();
 }
 
-/* HIGHLIGHT */
 function renderHighlight(e){
-
-  const catatan = showIf(e.Catatan || e.CATATAN);
-  const kebutuhan = showIf(e.Kebutuhan || e.KEBUTUHAN);
-
   return `
-    <div style="font-size:20px; font-weight:700; color:#ff7a00; margin-bottom:8px;">
-      🎬 ${safe(e.Nama_Event)}
+    <div class="hl-title">${safe(e.Nama_Event)}</div>
+
+    <div class="hl-list">
+      <div><span class="hl-icon">🏢</span>${safe(e.Client_ID)}</div>
+      <div><span class="hl-icon">📍</span>${safe(e.Lokasi)}</div>
+
+      <div><span class="hl-icon">📅</span>
+        ${formatDate(e.Tanggal_Mulai)}
+        ${e.Tanggal_Selesai ? " - " + formatDate(e.Tanggal_Selesai) : ""}
+      </div>
+
+      <div><span class="hl-icon">👤</span>${safe(e.PIC)}</div>
+
+      <div><span class="hl-icon">📡</span>${safe(e.Status_Event)}</div>
+
+      ${e.Catatan ? `
+        <div class="wrap">
+          <span class="hl-icon">📝</span>${e.Catatan}
+        </div>
+      ` : ""}
+
+      ${e.KEBUTUHAN ? `
+        <div class="wrap">
+          <span class="hl-icon">⚙️</span>${e.KEBUTUHAN}
+        </div>
+      ` : ""}
     </div>
-    <div>📅 ${formatDate(e.Tanggal_Mulai)}</div>
-    <div>📍 ${safe(e.Lokasi)}</div>
-    
-    ${catatan ? `<div>📝 ${catatan}</div>` : ""}
-    ${kebutuhan ? `<div>🧰 ${kebutuhan}</div>` : ""}
   `;
 }
 
 function rotateHighlight(){
   const box = document.getElementById("highlight");
+  if(!highlightEvents.length) return;
 
   box.style.opacity = 0;
-
   setTimeout(()=>{
-    highlightIndex++;
-
-    if(highlightIndex >= events.length){
-      highlightIndex = 0;
-    }
-
-    box.innerHTML = renderHighlight(events[highlightIndex]);
+    highlightIndex = (highlightIndex + 1) % highlightEvents.length;
+    box.innerHTML = renderHighlight(highlightEvents[highlightIndex]);
     box.style.opacity = 1;
-
   }, 500);
+}
+
+function generateTableHTML(events) {
+  // Group events by month
+  let grouped = {};
+  events.forEach(event => {
+    let month = getMonthName(event.Tanggal_Mulai);
+    if(!grouped[month]) grouped[month] = [];
+    grouped[month].push(event);
+  });
+
+  let monthList = Object.keys(grouped).map(month => ({
+    month,
+    events: grouped[month],
+    minDate: Math.min(...grouped[month].map(e => parseDate(e.Tanggal_Mulai)))
+  })).sort((a,b) => a.minDate - b.minDate);
+
+  let html = "";
+  monthList.forEach(group => {
+    html += `<div class="month">${group.month}</div>`;
+    group.events.forEach(row => {
+      html += `
+      <div class="row ${isPast(row) ? 'past-row' : ''}">
+        <div>${formatDate(row.Tanggal_Mulai)}</div>
+        <div>${safe(row.Nama_Event)}</div>
+        <div>${safe(row.Client_ID)}</div>
+        <div>${safe(row.Lokasi)}</div>
+      </div>`;
+    });
+  });
+  return html;
 }
 
 async function loadData(){
   const res = await fetch(apiURL);
   const data = await res.json();
 
-  events = data.sort((a, b) => parseDate(a.Tanggal_Mulai) - parseDate(b.Tanggal_Mulai));
+  events = data.sort((a,b)=> parseDate(a.Tanggal_Mulai)-parseDate(b.Tanggal_Mulai));
 
-  highlightIndex = events.findIndex(e => new Date(e.Tanggal_Mulai) >= new Date());
-  if(highlightIndex === -1) highlightIndex = 0;
+  highlightEvents = events.filter(e => !isPast(e));
 
-  document.getElementById("highlight").innerHTML = renderHighlight(events[highlightIndex]);
+  if(highlightEvents.length > 0){
+    document.getElementById("highlight").innerHTML = renderHighlight(highlightEvents[0]);
+  } else {
+    document.getElementById("highlight").innerHTML = "<div class='hl-title'>Tidak ada event bulan ini & depan</div>";
+  }
 
-  let html="";
-  let lastMonth="";
-
-  events.forEach(row=>{
-    let month = getMonthLabel(row.Tanggal_Mulai);
-
-    if(month !== lastMonth){
-      html += `<div class="month">${month}</div>`;
-      lastMonth = month;
-    }
-
-    html += `
-    <div class="row">
-      <div>${formatDate(row.Tanggal_Mulai)}</div>
-      <div>${safe(row.Nama_Event)}</div>
-      <div>${safe(row.Client_ID)}</div>
-      <div>${safe(row.Lokasi)}</div>
-    </div>`;
-  });
+  let html = generateTableHTML(events);
 
   document.getElementById("scrollContent").innerHTML = html + html;
 
   startScroll();
-
-  setInterval(rotateHighlight, 6000);
+  setInterval(rotateHighlight, 15000);
 }
 
-/* CLOCK */
 setInterval(()=>{
-  document.getElementById("clock").innerText =
-    new Date().toLocaleTimeString();
+  document.getElementById("clock").innerText = new Date().toLocaleTimeString();
 },1000);
 
 loadData();
+loadCrew();
+/* AUTO REFRESH DATA */
+setInterval(async () => {
+  try {
+    console.log("Update data...");
 
+    const res = await fetch(apiURL);
+    const data = await res.json();
+
+    events = data.sort((a,b)=> parseDate(a.Tanggal_Mulai)-parseDate(b.Tanggal_Mulai));
+
+    // UPDATE HIGHLIGHT (HALUS)
+    const box = document.getElementById("highlight");
+    box.style.opacity = 0;
+
+    setTimeout(()=>{
+      highlightEvents = events.filter(e => !isPast(e));
+      if (highlightIndex >= highlightEvents.length) highlightIndex = 0;
+      if(highlightEvents.length > 0){
+        box.innerHTML = renderHighlight(highlightEvents[highlightIndex]);
+      } else {
+        box.innerHTML = "<div class='hl-title'>Tidak ada event bulan ini & depan</div>";
+      }
+      box.style.opacity = 1;
+    }, 400);
+
+    // UPDATE TABLE
+    let html = generateTableHTML(events);
+
+    document.getElementById("scrollContent").innerHTML = html + html;
+
+  } catch (err) {
+    console.error("Gagal update:", err);
+  }
+
+}, 30000); // 30 detik
 </script>
 
 </body>
