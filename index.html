@@ -400,27 +400,17 @@ async function loadCrew(){
 function displayCrew(index){
   const img = document.getElementById("crewImage");
   const nameEl = document.getElementById("crewName");
-
+  
   if(index >= crew.length) index = 0;
-
+  
   const current = crew[index];
-
-  // PRELOAD IMAGE
-  const tempImg = new Image();
-  tempImg.src = current.foto;
-
-  tempImg.onload = () => {
-    // Baru update setelah gambar siap
-    img.src = current.foto;
-    nameEl.innerText = current.name;
-  };
-
-  tempImg.onerror = () => {
-    console.warn(`Foto gagal dimuat: ${current.name}`);
+  nameEl.innerText = current.name;
+  
+  img.onerror = () => {
+    console.warn(`Foto gagal dimuat: ${current.name}, mencoba gambar berikutnya...`);
     crewIndex = (crewIndex + 1) % crew.length;
     displayCrew(crewIndex);
   };
-}
   
   img.src = current.foto;
 }
@@ -430,7 +420,6 @@ let crewIndex = 0;
 function rotateCrew(){
   const img = document.getElementById("crewImage");
   const nextIndex = (crewIndex + 1) % crew.length;
-  
   
   // Fade out current
   img.classList.add("fade-out");
