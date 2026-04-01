@@ -16,7 +16,6 @@ body {
   color:#eaeaea;
   font-family:'Share Tech Mono', monospace;
   overflow:hidden;
-  letter-spacing:1px;
 }
 
 /* HEADER */
@@ -32,10 +31,7 @@ header {
 
 .title {
   font-size:34px;
-  font-weight:700;
-  letter-spacing:4px;
   color:#ff7a00;
-  text-transform:uppercase;
 }
 
 #clock {
@@ -52,10 +48,7 @@ header {
   max-width:420px;
   padding:20px;
   border-right:1px solid #222;
-  display:flex;
-  flex-direction:column;
   position:relative;
-  height:100%;
 }
 
 .highlight-title {
@@ -68,17 +61,11 @@ header {
   padding:18px;
   background:#000;
   border:1px solid #ff7a00;
-  font-size:16px;
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-  transition: all 0.6s ease;
 }
 
 /* RIGHT */
 .right { flex:1; display:flex; flex-direction:column; overflow:hidden; }
 
-/* GRID */
 .table-header,
 .row {
   display:grid;
@@ -93,30 +80,15 @@ header {
   background:#111;
 }
 
-.table-header div,
-.row div {
-  display:flex;
-  align-items:center;
-  padding:0 8px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-/* SCROLL */
-#scrollWrapper { flex:1; overflow:hidden; position:relative; }
-#scrollContent { position:absolute; width:100%; }
-
-/* ROW */
 .row {
   height:52px;
   font-size:24px;
   text-transform:uppercase;
-  background-color:#050505;
 }
+
 .row:nth-child(even){ background:#0a0a0a; }
 
-/* CREW */
+/* CREW SECTION */
 .crew-section {
   position:absolute;
   bottom:20px;
@@ -128,10 +100,10 @@ header {
   font-size:16px;
   color:#ff7a00;
   margin-bottom:10px;
-  text-transform:uppercase;
   font-weight:700;
 }
 
+/* NETFLIX STYLE */
 .crew-slider {
   border:1px solid #ff7a00;
   background:#000;
@@ -140,40 +112,54 @@ header {
   overflow:hidden;
 }
 
-.crew-slider img {
+.crew-img {
+  position:absolute;
   width:100%;
   height:100%;
-  object-fit:contain;
-  transition:opacity 0.4s ease;
+  object-fit:cover;
+  opacity:0;
+  transform:scale(1);
+  transition:opacity 0.8s ease, transform 6s ease;
+}
+
+.crew-img.active {
+  opacity:1;
+  transform:scale(1.08);
+}
+
+.crew-overlay {
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    to top,
+    rgba(0,0,0,0.9) 0%,
+    rgba(0,0,0,0.4) 40%,
+    transparent 70%
+  );
 }
 
 .crew-name {
   position:absolute;
-  bottom:0;
-  left:0;
-  right:0;
-  height:50px;
-  background:rgba(0,0,0,0.85);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#ffaa33;
-  font-size:24px;
+  bottom:10px;
+  left:12px;
+  right:12px;
+  color:#fff;
+  font-size:26px;
   font-weight:700;
+  text-shadow:0 0 10px rgba(0,0,0,0.8);
 }
 
-/* fade */
-.fade-out { opacity:0; }
+/* SCROLL */
+#scrollWrapper { flex:1; overflow:hidden; position:relative; }
+#scrollContent { position:absolute; width:100%; }
+
 </style>
 </head>
 
 <body>
 
 <header>
-  <div style="display:flex; align-items:center; gap:14px;">
-    <img src="https://raw.githubusercontent.com/mediakitaproductions/imageapp/555c0fffa480ce0dc7d5f422ddd117123511b742/mkp-logo-white-title.png" style="height:34px;">
-    <div class="title">MEDIA KITA SCHEDULE</div>
-  </div>
+  <div class="title">MEDIA KITA SCHEDULE</div>
   <div id="clock"></div>
 </header>
 
@@ -185,8 +171,11 @@ header {
 
     <div class="crew-section">
       <div class="crew-title">OUR CREW</div>
+
       <div class="crew-slider">
-        <img id="crewImage" src="">
+        <img id="crewImageA" class="crew-img active">
+        <img id="crewImageB" class="crew-img">
+        <div class="crew-overlay"></div>
         <div id="crewName" class="crew-name"></div>
       </div>
     </div>
@@ -212,6 +201,7 @@ const apiURL = "https://script.google.com/macros/s/AKfycbxRLGXgLuH1Wt6isqes6Cp5p
 
 let crew = [];
 let crewIndex = 0;
+let activeLayer = "A";
 
 /* LOAD CREW */
 async function loadCrew(){
@@ -234,16 +224,10 @@ async function loadCrew(){
   }
 }
 
-/* PRELOAD NEXT */
-function preloadNext(){
-  const next = crew[(crewIndex + 1) % crew.length];
-  const img = new Image();
-  img.src = next.foto;
-}
-
-/* DISPLAY (FIX DELAY) */
+/* DISPLAY NETFLIX */
 function displayCrew(index){
-  const img = document.getElementById("crewImage");
+  const imgA = document.getElementById("crewImageA");
+  const imgB = document.getElementById("crewImageB");
   const name = document.getElementById("crewName");
 
   const current = crew[index];
@@ -252,7 +236,23 @@ function displayCrew(index){
   temp.src = current.foto;
 
   temp.onload = () => {
-    img.src = current.foto;
+    let show, hide;
+
+    if(activeLayer === "A"){
+      show = imgB;
+      hide = imgA;
+      activeLayer = "B";
+    } else {
+      show = imgA;
+      hide = imgB;
+      activeLayer = "A";
+    }
+
+    show.src = current.foto;
+
+    show.classList.add("active");
+    hide.classList.remove("active");
+
     name.innerText = current.name;
   };
 
@@ -264,16 +264,16 @@ function displayCrew(index){
 
 /* ROTATE */
 function rotateCrew(){
-  const img = document.getElementById("crewImage");
+  crewIndex = (crewIndex + 1) % crew.length;
+  displayCrew(crewIndex);
+  preloadNext();
+}
 
-  img.classList.add("fade-out");
-
-  setTimeout(() => {
-    crewIndex = (crewIndex + 1) % crew.length;
-    displayCrew(crewIndex);
-    preloadNext();
-    img.classList.remove("fade-out");
-  }, 300);
+/* PRELOAD NEXT */
+function preloadNext(){
+  const next = crew[(crewIndex + 1) % crew.length];
+  const img = new Image();
+  img.src = next.foto;
 }
 
 /* CLOCK */
