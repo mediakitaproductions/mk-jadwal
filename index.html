@@ -8,8 +8,6 @@
 
 <style>
 * { box-sizing: border-box; }
-html, body { height:100%; }
-
 body {
   margin:0;
   background:#050505;
@@ -22,94 +20,59 @@ body {
 header {
   display:flex;
   justify-content:space-between;
-  align-items:center;
-  height:80px;
-  padding:0 40px;
-  background:#000;
+  padding:20px 40px;
   border-bottom:2px solid #ff7a00;
 }
 
-.title {
-  font-size:34px;
-  color:#ff7a00;
-}
-
-#clock {
-  font-size:22px;
-  color:#ffaa33;
-}
+.title { color:#ff7a00; font-size:30px; }
+#clock { color:#ffaa33; }
 
 /* LAYOUT */
 .main { display:flex; height:calc(100vh - 80px); }
 
 .left {
   width:28%;
-  min-width:300px;
-  max-width:420px;
   padding:20px;
   border-right:1px solid #222;
   position:relative;
 }
 
-.highlight-title {
-  font-size:24px;
-  color:#ff7a00;
-  margin-bottom:20px;
-}
-
-.highlight-box {
-  padding:18px;
-  background:#000;
-  border:1px solid #ff7a00;
-}
-
 /* RIGHT */
-.right { flex:1; display:flex; flex-direction:column; overflow:hidden; }
-
-.table-header,
-.row {
-  display:grid;
-  grid-template-columns: 100px 2.2fr 1.3fr 1.6fr;
-}
+.right { flex:1; display:flex; flex-direction:column; }
 
 .table-header {
-  height:50px;
-  font-size:16px;
-  font-weight:700;
-  color:#ff7a00;
+  display:grid;
+  grid-template-columns:100px 2fr 1.5fr 1.5fr;
   background:#111;
+  color:#ff7a00;
+  height:50px;
+  align-items:center;
+  padding:0 10px;
 }
 
 .row {
-  height:52px;
-  font-size:24px;
-  text-transform:uppercase;
+  display:grid;
+  grid-template-columns:100px 2fr 1.5fr 1.5fr;
+  height:50px;
+  align-items:center;
+  padding:0 10px;
+  font-size:22px;
 }
 
 .row:nth-child(even){ background:#0a0a0a; }
 
-/* CREW SECTION */
-.crew-section {
-  position:absolute;
-  bottom:20px;
-  left:20px;
-  right:20px;
-}
+/* SCROLL */
+#scrollWrapper { flex:1; overflow:hidden; position:relative; }
+#scrollContent { position:absolute; width:100%; }
 
-.crew-title {
-  font-size:16px;
-  color:#ff7a00;
-  margin-bottom:10px;
-  font-weight:700;
-}
+/* CREW (NETFLIX) */
+.crew-section { position:absolute; bottom:20px; left:20px; right:20px; }
 
-/* NETFLIX STYLE */
 .crew-slider {
-  border:1px solid #ff7a00;
-  background:#000;
   aspect-ratio:3/4;
   position:relative;
   overflow:hidden;
+  border:1px solid #ff7a00;
 }
 
 .crew-img {
@@ -118,7 +81,6 @@ header {
   height:100%;
   object-fit:cover;
   opacity:0;
-  transform:scale(1);
   transition:opacity 0.8s ease, transform 6s ease;
 }
 
@@ -130,29 +92,16 @@ header {
 .crew-overlay {
   position:absolute;
   inset:0;
-  background:linear-gradient(
-    to top,
-    rgba(0,0,0,0.9) 0%,
-    rgba(0,0,0,0.4) 40%,
-    transparent 70%
-  );
+  background:linear-gradient(to top,rgba(0,0,0,0.9),transparent);
 }
 
 .crew-name {
   position:absolute;
   bottom:10px;
-  left:12px;
-  right:12px;
+  left:10px;
   color:#fff;
-  font-size:26px;
-  font-weight:700;
-  text-shadow:0 0 10px rgba(0,0,0,0.8);
+  font-size:24px;
 }
-
-/* SCROLL */
-#scrollWrapper { flex:1; overflow:hidden; position:relative; }
-#scrollContent { position:absolute; width:100%; }
-
 </style>
 </head>
 
@@ -166,11 +115,11 @@ header {
 <div class="main">
 
   <div class="left">
-    <div class="highlight-title">EVENT TERDEKAT</div>
-    <div id="highlight" class="highlight-box"></div>
+    <div>EVENT TERDEKAT</div>
+    <div id="highlight"></div>
 
     <div class="crew-section">
-      <div class="crew-title">OUR CREW</div>
+      <div>OUR CREW</div>
 
       <div class="crew-slider">
         <img id="crewImageA" class="crew-img active">
@@ -199,179 +148,115 @@ header {
 <script>
 const apiURL = "https://script.google.com/macros/s/AKfycbxRLGXgLuH1Wt6isqes6Cp5pWEu-G5yNO93U8sISMLpOBjXpxt-RbI5CpD73xXf0Qar/exec";
 
-/* =========================
-   CREW (NETFLIX STYLE)
-========================= */
-let crew = [];
-let crewIndex = 0;
-let activeLayer = "A";
+/* CLOCK */
+setInterval(()=>{
+  document.getElementById("clock").innerText = new Date().toLocaleTimeString();
+},1000);
+
+/* ================= CREW ================= */
+let crew=[], crewIndex=0, activeLayer="A";
 
 async function loadCrew(){
-  const res = await fetch("https://api.github.com/repos/mediakitaproductions/foto-tim-mk/contents/");
-  const data = await res.json();
+  try{
+    const res = await fetch("https://api.github.com/repos/mediakitaproductions/foto-tim-mk/contents/");
+    const data = await res.json();
 
-  crew = data
-    .filter(f => f.name.endsWith(".png"))
-    .map(f => ({
-      name: f.name.replace(".png","").toUpperCase(),
-      foto: f.download_url
-    }));
+    crew = data.filter(f=>f.name.endsWith(".png"))
+      .map(f=>({name:f.name.replace(".png","").toUpperCase(),foto:f.download_url}));
 
-  crew.sort(() => Math.random() - 0.5);
-
-  if(crew.length){
-    displayCrew(0);
-    preloadNext();
-    setInterval(rotateCrew, 5000);
-  }
+    if(crew.length){
+      displayCrew(0);
+      setInterval(rotateCrew,5000);
+    }
+  }catch(e){ console.log("Crew error",e); }
 }
 
-function displayCrew(index){
-  const imgA = document.getElementById("crewImageA");
-  const imgB = document.getElementById("crewImageB");
-  const name = document.getElementById("crewName");
+function displayCrew(i){
+  const A=document.getElementById("crewImageA");
+  const B=document.getElementById("crewImageB");
+  const name=document.getElementById("crewName");
 
-  const current = crew[index];
+  const c=crew[i];
+  const temp=new Image();
+  temp.src=c.foto;
 
-  const temp = new Image();
-  temp.src = current.foto;
+  temp.onload=()=>{
+    let show = activeLayer==="A"?B:A;
+    let hide = activeLayer==="A"?A:B;
+    activeLayer = activeLayer==="A"?"B":"A";
 
-  temp.onload = () => {
-    let show, hide;
-
-    if(activeLayer === "A"){
-      show = imgB;
-      hide = imgA;
-      activeLayer = "B";
-    } else {
-      show = imgA;
-      hide = imgB;
-      activeLayer = "A";
-    }
-
-    show.src = current.foto;
-
+    show.src=c.foto;
     show.classList.add("active");
     hide.classList.remove("active");
 
-    name.innerText = current.name;
-  };
-
-  temp.onerror = () => {
-    crewIndex = (crewIndex + 1) % crew.length;
-    displayCrew(crewIndex);
+    name.innerText=c.name;
   };
 }
 
 function rotateCrew(){
-  crewIndex = (crewIndex + 1) % crew.length;
+  crewIndex=(crewIndex+1)%crew.length;
   displayCrew(crewIndex);
-  preloadNext();
 }
 
-function preloadNext(){
-  const next = crew[(crewIndex + 1) % crew.length];
-  const img = new Image();
-  img.src = next.foto;
-}
+/* ================= SCHEDULE ================= */
 
-/* =========================
-   SCHEDULE SYSTEM (FIXED)
-========================= */
-
-let y = 0;
-let events = [];
-let highlightEvents = [];
-let highlightIndex = 0;
-
-function safe(v){ return v || "-"; }
-
-function formatDate(v){
-  let d = new Date(v);
-  return d.toLocaleDateString("id-ID",{day:"2-digit",month:"short"});
-}
-
-function parseDate(v){
-  return v ? new Date(v) : new Date(0);
-}
-
-function isPast(event){
-  const now = new Date();
-  const end = event.Tanggal_Selesai ? parseDate(event.Tanggal_Selesai) : parseDate(event.Tanggal_Mulai);
-  return end < now;
-}
+let y=0;
 
 function startScroll(){
-  const el = document.getElementById("scrollContent");
-  function animate(){
-    y -= 0.3;
-    el.style.transform = `translateY(${y}px)`;
-    if(Math.abs(y) >= el.scrollHeight / 2){ y = 0; }
-    requestAnimationFrame(animate);
+  const el=document.getElementById("scrollContent");
+  function anim(){
+    y-=0.3;
+    el.style.transform=`translateY(${y}px)`;
+    if(Math.abs(y)>=el.scrollHeight/2) y=0;
+    requestAnimationFrame(anim);
   }
-  animate();
+  anim();
 }
 
-function renderHighlight(e){
-  return `
-    <div>${safe(e.Nama_Event)}</div>
-    <div>${safe(e.Client_ID)}</div>
-    <div>${safe(e.Lokasi)}</div>
-  `;
-}
-
-function rotateHighlight(){
-  const box = document.getElementById("highlight");
-  if(!highlightEvents.length) return;
-
-  box.style.opacity = 0;
-  setTimeout(()=>{
-    highlightIndex = (highlightIndex + 1) % highlightEvents.length;
-    box.innerHTML = renderHighlight(highlightEvents[highlightIndex]);
-    box.style.opacity = 1;
-  }, 400);
-}
-
-function generateTableHTML(events){
-  let html = "";
-  events.forEach(row => {
-    html += `
-    <div class="row ${isPast(row) ? 'past-row' : ''}">
-      <div>${formatDate(row.Tanggal_Mulai)}</div>
-      <div>${safe(row.Nama_Event)}</div>
-      <div>${safe(row.Client_ID)}</div>
-      <div>${safe(row.Lokasi)}</div>
+function renderTable(data){
+  let html="";
+  data.forEach(e=>{
+    html+=`
+    <div class="row">
+      <div>${new Date(e.Tanggal_Mulai).toLocaleDateString("id-ID")}</div>
+      <div>${e.Nama_Event}</div>
+      <div>${e.Client_ID}</div>
+      <div>${e.Lokasi}</div>
     </div>`;
   });
   return html;
 }
 
 async function loadData(){
-  const res = await fetch(apiURL);
-  const data = await res.json();
+  try{
+    const res = await fetch(apiURL);
+    let data = await res.json();
 
-  events = data.sort((a,b)=> parseDate(a.Tanggal_Mulai)-parseDate(b.Tanggal_Mulai));
-  highlightEvents = events.filter(e => !isPast(e));
+    if(!Array.isArray(data)) throw "Invalid data";
 
-  if(highlightEvents.length){
-    document.getElementById("highlight").innerHTML = renderHighlight(highlightEvents[0]);
+    const html = renderTable(data);
+
+    const container = document.getElementById("scrollContent");
+    container.innerHTML = html + html;
+
+    startScroll();
+
+  }catch(err){
+    console.log("API ERROR, pakai dummy");
+
+    const dummy=[
+      {Tanggal_Mulai:new Date(),Nama_Event:"EVENT TEST",Client_ID:"CLIENT",Lokasi:"KUPANG"},
+      {Tanggal_Mulai:new Date(),Nama_Event:"SHOOTING",Client_ID:"MEDIA KITA",Lokasi:"STUDIO"}
+    ];
+
+    const html = renderTable(dummy);
+    document.getElementById("scrollContent").innerHTML = html + html;
+
+    startScroll();
   }
-
-  let html = generateTableHTML(events);
-  document.getElementById("scrollContent").innerHTML = html + html;
-
-  startScroll();
-  setInterval(rotateHighlight, 15000);
 }
 
-/* =========================
-   INIT
-========================= */
-
-setInterval(()=>{
-  document.getElementById("clock").innerText = new Date().toLocaleTimeString();
-},1000);
-
+/* INIT */
 loadCrew();
 loadData();
 </script>
