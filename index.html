@@ -8,7 +8,6 @@
 
 <style>
 * { box-sizing: border-box; }
-
 html, body { height:100%; }
 
 body {
@@ -45,12 +44,8 @@ header {
 }
 
 /* LAYOUT */
-.main {
-  display:flex;
-  height:calc(100vh - 80px);
-}
+.main { display:flex; height:calc(100vh - 80px); }
 
-/* LEFT */
 .left {
   width:28%;
   min-width:300px;
@@ -81,12 +76,7 @@ header {
 }
 
 /* RIGHT */
-.right {
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
-}
+.right { flex:1; display:flex; flex-direction:column; overflow:hidden; }
 
 /* GRID */
 .table-header,
@@ -95,63 +85,27 @@ header {
   grid-template-columns: 100px 2.2fr 1.3fr 1.6fr;
 }
 
-/* HEADER TABLE */
 .table-header {
   height:50px;
   font-size:16px;
   font-weight:700;
   color:#ff7a00;
   background:#111;
-  letter-spacing:1px;
-}
-
-.gate-icon {
-  width:3px;
-  height:20px;
-  background:linear-gradient(to bottom, #ff7a00, #ffaa33);
-  margin-right:12px;
-  display:inline-block;
 }
 
 .table-header div,
 .row div {
-  justify-content:flex-start;
   display:flex;
   align-items:center;
   padding:0 8px;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
-  position: relative;
-}
-
-.table-header div:not(:last-child)::after,
-.row div:not(:last-child)::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 15%;
-  height: 70%;
-  width: 1px;
-  background: linear-gradient(to bottom, transparent, rgba(255,122,0,0.4), transparent);
-}
-
-.table-header div:nth-child(2),
-.row div:nth-child(2) {
-  padding-left:4px;
 }
 
 /* SCROLL */
-#scrollWrapper {
-  flex:1;
-  overflow:hidden;
-  position:relative;
-}
-
-#scrollContent {
-  position:absolute;
-  width:100%;
-}
+#scrollWrapper { flex:1; overflow:hidden; position:relative; }
+#scrollContent { position:absolute; width:100%; }
 
 /* ROW */
 .row {
@@ -159,70 +113,8 @@ header {
   font-size:24px;
   text-transform:uppercase;
   background-color:#050505;
-  background-image: 
-    linear-gradient(rgba(255,255,255,0.12) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.12) 1px, transparent 1px);
-  background-size: 3px 3px;
-  box-shadow: inset 0 0 8px rgba(255,122,0,0.15);
 }
-
-.row div {
-  letter-spacing:0.3px;
-  border-right: 1px solid rgba(255,122,0,0.2);
-}
-
-.row div:last-child {
-  border-right: none;
-}
-
-.row:nth-child(odd){ background-color:#050505; }
-.row:nth-child(even){ background-color:#0a0a0a; }
-
-.row div:nth-child(2){ color:#ff7a00; }
-.row div:nth-child(4){ color:#ff7a00; }
-
-.past-row {
-  background-color: rgba(0, 50, 0, 0.2) !important;
-  color: #00aa00;
-}
-
-.past-row div:nth-child(2),
-.past-row div:nth-child(4) {
-  color: #00aa00;
-}
-
-/* MONTH */
-.month {
-  padding:8px 16px;
-  font-size:18px;
-  color:#ff7a00;
-  background:#0a0a0a;
-  font-weight: bold;
-  text-transform: uppercase;
-}
-
-/* HIGHLIGHT */
-.hl-title {
-  font-size:20px;
-  color:#ffaa33;
-  font-weight:700;
-}
-
-.hl-list {
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-}
-
-.hl-list div {
-  display:flex;
-  gap:10px;
-}
-
-.hl-icon {
-  width:20px;
-  color:#ff7a00;
-}
+.row:nth-child(even){ background:#0a0a0a; }
 
 /* CREW */
 .crew-section {
@@ -241,41 +133,20 @@ header {
 }
 
 .crew-slider {
-  margin-top:10px;
   border:1px solid #ff7a00;
   background:#000;
-  aspect-ratio: 3 / 4;
+  aspect-ratio:3/4;
   position:relative;
   overflow:hidden;
 }
 
-/* 🔥 NETFLIX STYLE */
-.crew-img {
-  position:absolute;
+.crew-slider img {
   width:100%;
   height:100%;
-  object-fit:cover;
-  opacity:0;
-  transform:scale(1);
-  transition:opacity 0.8s ease, transform 6s ease;
+  object-fit:contain;
+  transition:opacity 0.4s ease;
 }
 
-.crew-img.active {
-  opacity:1;
-  transform:scale(1.08);
-}
-
-.crew-overlay {
-  position:absolute;
-  inset:0;
-  background:linear-gradient(
-    to top,
-    rgba(0,0,0,0.9),
-    transparent
-  );
-}
-
-/* NAME */
 .crew-name {
   position:absolute;
   bottom:0;
@@ -287,11 +158,12 @@ header {
   align-items:center;
   justify-content:center;
   color:#ffaa33;
-  border-top:1px solid #ff7a00;
   font-size:24px;
   font-weight:700;
-  text-transform:uppercase;
 }
+
+/* fade */
+.fade-out { opacity:0; }
 </style>
 </head>
 
@@ -313,24 +185,19 @@ header {
 
     <div class="crew-section">
       <div class="crew-title">OUR CREW</div>
-
-      <!-- 🔥 UPDATED -->
       <div class="crew-slider">
-        <img id="crewImageA" class="crew-img active">
-        <img id="crewImageB" class="crew-img">
-        <div class="crew-overlay"></div>
+        <img id="crewImage" src="">
         <div id="crewName" class="crew-name"></div>
       </div>
-
     </div>
   </div>
 
   <div class="right">
     <div class="table-header">
-      <div><span class="gate-icon"></span>DATE</div>
-      <div><span class="gate-icon"></span>EVENT</div>
-      <div><span class="gate-icon"></span>CLIENT</div>
-      <div><span class="gate-icon"></span>LOCATION</div>
+      <div>DATE</div>
+      <div>EVENT</div>
+      <div>CLIENT</div>
+      <div>LOCATION</div>
     </div>
 
     <div id="scrollWrapper">
@@ -343,14 +210,13 @@ header {
 <script>
 const apiURL = "https://script.google.com/macros/s/AKfycbxRLGXgLuH1Wt6isqes6Cp5pWEu-G5yNO93U8sISMLpOBjXpxt-RbI5CpD73xXf0Qar/exec";
 
-/* CREW DATA */
 let crew = [];
 let crewIndex = 0;
-let activeLayer = "A";
 
+/* LOAD CREW */
 async function loadCrew(){
-  let res = await fetch("https://api.github.com/repos/mediakitaproductions/foto-tim-mk/contents/");
-  let data = await res.json();
+  const res = await fetch("https://api.github.com/repos/mediakitaproductions/foto-tim-mk/contents/");
+  const data = await res.json();
 
   crew = data
     .filter(f => f.name.endsWith(".png"))
@@ -359,15 +225,25 @@ async function loadCrew(){
       foto: f.download_url
     }));
 
+  crew.sort(() => Math.random() - 0.5);
+
   if(crew.length){
     displayCrew(0);
+    preloadNext();
     setInterval(rotateCrew, 5000);
   }
 }
 
+/* PRELOAD NEXT */
+function preloadNext(){
+  const next = crew[(crewIndex + 1) % crew.length];
+  const img = new Image();
+  img.src = next.foto;
+}
+
+/* DISPLAY (FIX DELAY) */
 function displayCrew(index){
-  const A = document.getElementById("crewImageA");
-  const B = document.getElementById("crewImageB");
+  const img = document.getElementById("crewImage");
   const name = document.getElementById("crewName");
 
   const current = crew[index];
@@ -376,78 +252,35 @@ function displayCrew(index){
   temp.src = current.foto;
 
   temp.onload = () => {
-    let show = activeLayer === "A" ? B : A;
-    let hide = activeLayer === "A" ? A : B;
-
-    activeLayer = activeLayer === "A" ? "B" : "A";
-
-    show.src = current.foto;
-    show.classList.add("active");
-    hide.classList.remove("active");
-
+    img.src = current.foto;
     name.innerText = current.name;
+  };
+
+  temp.onerror = () => {
+    crewIndex = (crewIndex + 1) % crew.length;
+    displayCrew(crewIndex);
   };
 }
 
+/* ROTATE */
 function rotateCrew(){
-  crewIndex = (crewIndex + 1) % crew.length;
-  displayCrew(crewIndex);
+  const img = document.getElementById("crewImage");
+
+  img.classList.add("fade-out");
+
+  setTimeout(() => {
+    crewIndex = (crewIndex + 1) % crew.length;
+    displayCrew(crewIndex);
+    preloadNext();
+    img.classList.remove("fade-out");
+  }, 300);
 }
 
-/* === ORIGINAL SCHEDULE (UNCHANGED) === */
-let y = 0;
-let events = [];
-let highlightEvents = [];
-let highlightIndex = 0;
-
-function safe(v){ return v || "-"; }
-
-function formatDate(v){
-  let d = new Date(v);
-  const day = String(d.getDate()).padStart(2, '0');
-  const month = d.toLocaleDateString("id-ID",{month:"short"});
-  return `${day} ${month}`;
-}
-
-function parseDate(v){ return v ? new Date(v) : new Date(0); }
-
-function startScroll(){
-  const el = document.getElementById("scrollContent");
-  function animate(){
-    y -= 0.35;
-    el.style.transform = `translateY(${y}px)`;
-    if(Math.abs(y) >= el.scrollHeight / 2){ y = 0; }
-    requestAnimationFrame(animate);
-  }
-  animate();
-}
-
-async function loadData(){
-  const res = await fetch(apiURL);
-  const data = await res.json();
-
-  events = data.sort((a,b)=> parseDate(a.Tanggal_Mulai)-parseDate(b.Tanggal_Mulai));
-
-  let html = "";
-  events.forEach(row=>{
-    html += `
-    <div class="row">
-      <div>${formatDate(row.Tanggal_Mulai)}</div>
-      <div>${row.Nama_Event}</div>
-      <div>${row.Client_ID}</div>
-      <div>${row.Lokasi}</div>
-    </div>`;
-  });
-
-  document.getElementById("scrollContent").innerHTML = html + html;
-  startScroll();
-}
-
+/* CLOCK */
 setInterval(()=>{
   document.getElementById("clock").innerText = new Date().toLocaleTimeString();
 },1000);
 
-loadData();
 loadCrew();
 </script>
 
