@@ -237,6 +237,10 @@ header {
   will-change: transform;
 }
 
+.row {
+  will-change: background, box-shadow;
+}
+
 /* MONTH SEPARATOR */
 .month {
   padding: 8px 16px;
@@ -654,20 +658,17 @@ function syncHighlightToTable(eventName) {
   rows.forEach(row => {
     if (row.dataset.event === eventName) {
 
+      // reset animasi
       row.classList.remove("active");
 
-      setTimeout(() => {
-        row.classList.add("active");
+      void row.offsetWidth; // force reflow (penting!)
 
-        // 🔥 APPLY DECODE KE SEMUA CELL
-        const cells = row.querySelectorAll("div");
+      row.classList.add("active");
 
-        cells.forEach(cell => {
-          const original = cell.innerText;
-          decodeText(cell, original);
-        });
-
-      }, 50);
+      // 🔥 decode tetap jalan (kalau kamu pakai)
+      const eventCell = row.children[1];
+      const original = eventCell.innerText;
+      decodeText(eventCell, original);
 
     } else {
       row.classList.remove("active");
