@@ -310,6 +310,67 @@ header {
   transition: opacity 0.8s ease-in-out;
 }
 
+/* ===== NETFLIX STYLE CREW ===== */
+.crew-slider {
+  perspective: 1000px;
+}
+
+.crew-slider img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+
+  transform: scale(1);
+  opacity: 1;
+
+  transition: 
+    opacity 0.6s ease,
+    transform 1.2s ease;
+}
+
+/* saat keluar */
+.crew-slider img.fade-out {
+  opacity: 0;
+  transform: scale(1.08);
+}
+
+/* saat masuk */
+.crew-slider img.fade-in {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* subtle light sweep */
+.crew-slider::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.08),
+    transparent
+  );
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* aktif saat transisi */
+.crew-slider.active::before {
+  animation: lightSweep 1s ease;
+}
+
+@keyframes lightSweep {
+  0% { transform: translateX(-100%); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateX(100%); opacity: 0; }
+}
+
+.crew-slider img {
+  will-change: transform, opacity;
+}
+
 .crew-name {
   position: absolute;
   bottom: 0;
@@ -501,15 +562,28 @@ function displayCrew(index) {
 
 function rotateCrew() {
   const img = document.getElementById("crewImage");
+  const slider = document.querySelector(".crew-slider");
+
   const nextIndex = (crewIndex + 1) % crew.length;
 
-  // Fade out current
+  // trigger animasi keluar
   img.classList.add("fade-out");
+  slider.classList.add("active");
 
   setTimeout(() => {
     crewIndex = nextIndex;
     displayCrew(crewIndex);
+
+    // reset state masuk
     img.classList.remove("fade-out");
+    img.classList.add("fade-in");
+
+    // reset efek
+    setTimeout(() => {
+      img.classList.remove("fade-in");
+      slider.classList.remove("active");
+    }, 800);
+
   }, 400);
 }
 
