@@ -564,25 +564,37 @@ function rotateCrew() {
   const img = document.getElementById("crewImage");
   const slider = document.querySelector(".crew-slider");
 
+  if (!crew.length) return;
+
   const nextIndex = (crewIndex + 1) % crew.length;
 
-  // trigger animasi keluar
+  // reset dulu biar aman
+  img.classList.remove("fade-in", "fade-out");
+
+  // paksa reflow (penting!)
+  void img.offsetWidth;
+
+  // animasi keluar
   img.classList.add("fade-out");
   slider.classList.add("active");
 
   setTimeout(() => {
     crewIndex = nextIndex;
-    displayCrew(crewIndex);
 
-    // reset state masuk
+    const current = crew[crewIndex];
+
+    // update gambar langsung (lebih stabil)
+    img.src = current.foto;
+
+    // animasi masuk
     img.classList.remove("fade-out");
     img.classList.add("fade-in");
 
-    // reset efek
+    // reset class
     setTimeout(() => {
       img.classList.remove("fade-in");
       slider.classList.remove("active");
-    }, 800);
+    }, 700);
 
   }, 400);
 }
