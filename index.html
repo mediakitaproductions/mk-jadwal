@@ -533,8 +533,9 @@ async function loadCrew() {
 
     // INIT CREW
     if (crew.length > 0) {
-      displayCrew(0);
-      setInterval(rotateCrew, 5000);
+      crewIndex = 0;
+displayCrew(crewIndex);
+setInterval(rotateCrew, 5000);
     }
 
   } catch (err) {
