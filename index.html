@@ -753,9 +753,11 @@ function syncHighlightToTable(eventName) {
       row.classList.add("active");
 
       // 🔥 decode tetap jalan (kalau kamu pakai)
-      const eventCell = row.children[1];
-      const original = eventCell.innerText;
-      decodeText(eventCell, original);
+      const cells = row.querySelectorAll("div");
+      cells.forEach(cell => {
+      const original = cell.innerText;
+      decodeText(cell, original);
+});
 
     } else {
       row.classList.remove("active");
