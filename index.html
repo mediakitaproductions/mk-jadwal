@@ -211,6 +211,15 @@ header {
   animation: smoothBlink 1.2s ease;
 }
 
+.row.decoded {
+  background: rgba(0, 140, 255, 0.15) !important;
+  box-shadow: inset 0 0 10px rgba(0, 140, 255, 0.4);
+}
+
+.row.decoded div {
+  color: #4db8ff !important;
+}
+
 /* glow halus + fade */
 @keyframes smoothBlink {
   0% {
@@ -694,7 +703,7 @@ function generateTableHTML(events) {
   return html;
 }
 
-function decodeText(element, finalText) {
+function decodeText(element, finalText, onComplete) {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
   let iterations = 0;
 
@@ -709,9 +718,12 @@ function decodeText(element, finalText) {
 
     if (iterations >= finalText.length) {
       clearInterval(interval);
+
+      // 🔥 trigger selesai decode
+      if (onComplete) onComplete();
     }
 
-    iterations += 1 / 2; // speed decode
+    iterations += 1 / 2;
   }, 30);
 }
 
@@ -754,14 +766,27 @@ function syncHighlightToTable(eventName) {
 
       // 🔥 decode tetap jalan (kalau kamu pakai)
       const cells = row.querySelectorAll("div");
-      cells.forEach(cell => {
-      const original = cell.innerText;
-      decodeText(cell, original);
+
+let finished = 0;
+
+cells.forEach((cell, i) => {
+  const original = cell.innerText;
+
+  setTimeout(() => {
+    decodeText(cell, original, () => {
+      finished++;
+
+      // kalau semua cell selesai decode
+      if (finished === cells.length) {
+        row.classList.add("decoded");
+      }
+    });
+  }, i * 80);
 });
 
     } else {
-      row.classList.remove("active");
-    }
+  row.classList.remove("active", "decoded");
+}
   });
 }
 
