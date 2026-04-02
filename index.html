@@ -515,6 +515,19 @@
           transform: scale(1);
         }
       }
+      body.ready {
+        opacity: 1;
+        animation: slightZoom 1.2s ease;
+      }
+
+      @keyframes slightZoom {
+        from {
+          transform: scale(1.02);
+        }
+        to {
+          transform: scale(1);
+        }
+      }
     </style>
   </head>
 
@@ -979,13 +992,27 @@
       }, 1000);
 
       // Load initial data
+      const MIN_LOADING = 1200;
+      const startTime = Date.now();
+
       Promise.all([loadData(), loadCrew()]).then(() => {
+        const loader = document.getElementById("loader");
+
+        const elapsed = Date.now() - startTime;
+        const delay = Math.max(0, MIN_LOADING - elapsed);
+
         setTimeout(() => {
-          document.getElementById("loader").style.opacity = 0;
+          // munculin UI pelan
+          document.body.classList.add("ready");
+
+          // animasi cinematic keluar
+          loader.classList.add("hide");
+
+          // remove setelah animasi selesai
           setTimeout(() => {
-            document.getElementById("loader").remove();
-          }, 500);
-        }, 1500);
+            loader.remove();
+          }, 900);
+        }, delay);
       });
 
       // Auto refresh every 30 seconds
