@@ -669,11 +669,13 @@
 
           crew = allFiles
             .filter(
-              (file) => file.name && file.name.toLowerCase().endsWith(".png"),
+              (file) => file.name && file.name.toLowerCase().endsWith(".webp"),
             )
             .map((file) => ({
-              name: file.name.replace(/\.png$/i, "").toUpperCase(),
-              foto: file.download_url,
+              name: file.name.replace(/\.webp$/i, "").toUpperCase(),
+              foto: file.download_url
+                .replace("raw.githubusercontent.com", "cdn.jsdelivr.net/gh")
+                .replace("/main/", "@main/"),
             }));
 
           // Shuffle crew for random order
