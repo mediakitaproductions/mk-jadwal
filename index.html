@@ -208,23 +208,29 @@ header {
   background: rgba(255,122,0,0.12) !important;
   border-left: 4px solid #ff7a00;
 
-  transform: scale(1.05);
-  z-index: 2;
-
-  box-shadow: 0 0 12px rgba(255,122,0,0.4);
-
-  transition: all 0.4s ease;
+  animation: smoothBlink 1.2s ease;
 }
 
-/* pulse halus */
-@keyframes pulseRow {
-  0%   { box-shadow: 0 0 6px rgba(255,122,0,0.3); }
-  50%  { box-shadow: 0 0 18px rgba(255,122,0,0.6); }
-  100% { box-shadow: 0 0 6px rgba(255,122,0,0.3); }
+/* glow halus + fade */
+@keyframes smoothBlink {
+  0% {
+    background: rgba(255,122,0,0.05);
+    box-shadow: 0 0 0px rgba(255,122,0,0);
+  }
+
+  50% {
+    background: rgba(255,122,0,0.18);
+    box-shadow: 0 0 14px rgba(255,122,0,0.35);
+  }
+
+  100% {
+    background: rgba(255,122,0,0.12);
+    box-shadow: 0 0 6px rgba(255,122,0,0.2);
+  }
 }
 
 .row.active {
-  animation: pulseRow 2s infinite;
+  animation: smoothBlink 1.2s ease;
 }
 
 .row {
