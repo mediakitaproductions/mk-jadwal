@@ -7,121 +7,127 @@
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
 <style>
-* { box-sizing: border-box; }
-
-html, body { height:100%; }
-
-body {
-  margin:0;
-  background:#050505;
-  color:#eaeaea;
-  font-family:'Share Tech Mono', monospace;
-  overflow:hidden;
-  letter-spacing:1px;
+/* ==================== BASE STYLES ==================== */
+* {
+  box-sizing: border-box;
 }
 
-/* HEADER */
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #050505;
+  color: #eaeaea;
+  font-family: 'Share Tech Mono', monospace;
+  overflow: hidden;
+  letter-spacing: 1px;
+}
+
+/* ==================== HEADER STYLES ==================== */
 header {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  height:80px;
-  padding:0 40px;
-  background:#000;
-  border-bottom:2px solid #ff7a00;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 80px;
+  padding: 0 40px;
+  background: #000;
+  border-bottom: 2px solid #ff7a00;
 }
 
 .title {
-  font-size:34px;
-  font-weight:700;
-  letter-spacing:4px;
-  color:#ff7a00;
-  text-transform:uppercase;
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: #ff7a00;
+  text-transform: uppercase;
 }
 
 #clock {
-  font-size:22px;
-  color:#ffaa33;
+  font-size: 22px;
+  color: #ffaa33;
 }
 
-/* LAYOUT */
+/* ==================== LAYOUT STYLES ==================== */
 .main {
-  display:flex;
-  height:calc(100vh - 80px);
+  display: flex;
+  height: calc(100vh - 80px);
 }
 
-/* LEFT */
+/* LEFT PANEL */
 .left {
-  width:28%;
-  min-width:300px;
-  max-width:420px;
-  padding:20px;
-  border-right:1px solid #222;
-  display:flex;
-  flex-direction:column;
-  position:relative;   /* WAJIB */
-  height:100%;         /* WAJIB */
+  width: 28%;
+  min-width: 300px;
+  max-width: 420px;
+  padding: 20px;
+  border-right: 1px solid #222;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 100%;
 }
 
 .highlight-title {
-  font-size:24px;
-  color:#ff7a00;
-  margin-bottom:20px;
+  font-size: 24px;
+  color: #ff7a00;
+  margin-bottom: 20px;
 }
 
 .highlight-box {
-  padding:18px;
-  background:#000;
-  border:1px solid #ff7a00;
-  font-size:16px;
-  display:flex;
-  flex-direction:column;
-  gap:6px;
+  padding: 18px;
+  background: #000;
+  border: 1px solid #ff7a00;
+  font-size: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   transition: all 0.6s ease;
 }
 
-/* RIGHT */
+/* RIGHT PANEL */
 .right {
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-/* GRID */
+/* ==================== TABLE STYLES ==================== */
+/* GRID LAYOUT */
 .table-header,
 .row {
-  display:grid;
-  grid-template-columns: 100px 2.2fr 1.3fr 1.6fr;
+  display: grid;
+  grid-template-columns: 100px 1.8fr 1.7fr 1.6fr;
 }
 
 /* HEADER TABLE */
 .table-header {
-  height:50px;
-  font-size:16px;
-  font-weight:700;
-  color:#ff7a00;
-  background:#111;
-  letter-spacing:1px;
+  height: 50px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #ff7a00;
+  background: #111;
+  letter-spacing: 1px;
 }
 
 .gate-icon {
-  width:3px;
-  height:20px;
-  background:linear-gradient(to bottom, #ff7a00, #ffaa33);
-  margin-right:12px;
-  display:inline-block;
+  width: 3px;
+  height: 20px;
+  background: linear-gradient(to bottom, #ff7a00, #ffaa33);
+  margin-right: 12px;
+  display: inline-block;
 }
 
 .table-header div,
 .row div {
-  justify-content:flex-start;
-  display:flex;
-  align-items:center;
-  padding:0 8px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
+  justify-content: flex-start;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   position: relative;
 }
 
@@ -138,36 +144,36 @@ header {
 
 .table-header div:nth-child(2),
 .row div:nth-child(2) {
-  padding-left:4px;
+  padding-left: 4px;
 }
-/* SCROLL */
+
+/* SCROLL CONTAINER */
 #scrollWrapper {
-  flex:1;
-  overflow:hidden;
-  position:relative;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
 }
 
 #scrollContent {
-  position:absolute;
-  width:100%;
+  position: absolute;
+  width: 100%;
 }
 
-/* ROW */
+/* ROW STYLES */
 .row {
-  height:52px;
-  font-size:24px;
-  text-transform:uppercase;
-  background-color:#050505;
-  background-image: 
+  height: 52px;
+  font-size: 24px;
+  text-transform: uppercase;
+  background-color: #050505;
+  background-image:
     linear-gradient(rgba(255,255,255,0.12) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255,255,255,0.12) 1px, transparent 1px);
   background-size: 3px 3px;
   box-shadow: inset 0 0 8px rgba(255,122,0,0.15);
 }
 
-/* PERBAIKI JARAK HURUF ISI DATA */
 .row div {
-  letter-spacing:0.3px;
+  letter-spacing: 0.3px;
   border-right: 1px solid rgba(255,122,0,0.2);
 }
 
@@ -175,11 +181,18 @@ header {
   border-right: none;
 }
 
-.row:nth-child(odd){ background-color:#050505; }
-.row:nth-child(even){ background-color:#0a0a0a; }
+.row:nth-child(odd) {
+  background-color: #050505;
+}
 
-.row div:nth-child(2){ color:#ff7a00; }
-.row div:nth-child(4){ color:#ff7a00; }
+.row:nth-child(even) {
+  background-color: #0a0a0a;
+}
+
+.row div:nth-child(2),
+.row div:nth-child(4) {
+  color: #ff7a00;
+}
 
 .past-row {
   background-color: rgba(0, 50, 0, 0.2) !important;
@@ -191,183 +204,215 @@ header {
   color: #00aa00;
 }
 
-/* MONTH */
+/* MONTH SEPARATOR */
 .month {
-  padding:8px 16px;
-  font-size:18px;
-  color:#ff7a00;
-  background:#0a0a0a;
+  padding: 8px 16px;
+  font-size: 18px;
+  color: #ff7a00;
+  background: #0a0a0a;
   font-weight: bold;
   text-transform: uppercase;
 }
 
-/* HIGHLIGHT */
+/* ==================== HIGHLIGHT STYLES ==================== */
 .hl-title {
-  font-size:20px;
-  color:#ffaa33;
-  font-weight:700;
+  font-size: 20px;
+  color: #ffaa33;
+  font-weight: 700;
 }
 
 .hl-list {
-  display:flex;
-  flex-direction:column;
-  gap:6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .hl-list div {
-  display:flex;
-  gap:10px;
+  display: flex;
+  gap: 10px;
 }
 
 .hl-icon {
-  width:20px;
-  color:#ff7a00;
+  width: 20px;
+  color: #ff7a00;
 }
 
-/* CREW */
+/* ==================== CREW STYLES ==================== */
 .crew-section {
-  position:absolute;
-  bottom:20px;
-  left:20px;
-  right:20px;
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
 }
 
 .crew-title {
-  font-size:16px;
-  color:#ff7a00;
-  margin-bottom:10px;
-  text-transform:uppercase;
-  font-weight:700;
+  font-size: 16px;
+  color: #ff7a00;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  font-weight: 700;
 }
+
 .crew-slider {
-  margin-top:10px;
-  border:1px solid #ff7a00;
-  background:#000;
-
-  /* ✨ portrait ratio */
+  margin-top: 10px;
+  border: 1px solid #ff7a00;
+  background: #000;
   aspect-ratio: 3 / 4;
-
-  position:relative;
-  overflow:hidden;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* GAMBAR */
 .crew-slider img {
-  width:100%;
-  height:100%;
-
-  object-fit:contain; /* tidak terpotong */
-  object-position:center;
-
-  transition:opacity 0.8s ease-in-out;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  transition: opacity 0.8s ease-in-out;
 }
 
-/* NAMA (OVERLAY BAWAH) */
 .crew-name {
-  position:absolute;
-  bottom:0;
-  left:0;
-  right:0;
-  height:50px;
-  background:rgba(0,0,0,0.85);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#ffaa33;
-  border-top:1px solid #ff7a00;
-  font-size:24px;
-  font-weight:700;
-  letter-spacing:1px;
-  text-transform:uppercase;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffaa33;
+  border-top: 1px solid #ff7a00;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
-/* OPTIONAL: BIAR LEBIH HIDUP */
 .crew-slider::after {
-  content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
   box-shadow: inset 0 0 15px rgba(255,122,0,0.15);
 }
 
 .fade-out {
-  opacity:0;
+  opacity: 0;
 }
 </style>
 </head>
 
 <body>
+  <!-- ==================== HEADER ==================== -->
+  <header>
+    <div style="display:flex; align-items:center; gap:14px;">
+      <img src="https://raw.githubusercontent.com/mediakitaproductions/imageapp/555c0fffa480ce0dc7d5f422ddd117123511b742/mkp-logo-white-title.png" style="height:34px;">
+      <div class="title">MEDIA KITA SCHEDULE</div>
+    </div>
+    <div id="clock"></div>
+  </header>
 
-<header>
-  <div style="display:flex; align-items:center; gap:14px;">
-    <img src="https://raw.githubusercontent.com/mediakitaproductions/imageapp/555c0fffa480ce0dc7d5f422ddd117123511b742/mkp-logo-white-title.png" style="height:34px;">
-    <div class="title">MEDIA KITA SCHEDULE</div>
-  </div>
-  <div id="clock"></div>
-</header>
+  <!-- ==================== MAIN LAYOUT ==================== -->
+  <div class="main">
+    <!-- LEFT PANEL -->
+    <div class="left">
+      <div class="highlight-title">EVENT TERDEKAT</div>
+      <div id="highlight" class="highlight-box"></div>
 
-<div class="main">
+      <!-- CREW SECTION -->
+      <div class="crew-section">
+        <div class="crew-title">OUR CREW</div>
+        <div class="crew-slider">
+          <img id="crewImage" src="">
+          <div id="crewName" class="crew-name"></div>
+        </div>
+      </div>
+    </div>
 
-  <div class="left">
-    <div class="highlight-title">EVENT TERDEKAT</div>
-    <div id="highlight" class="highlight-box"></div>
+    <!-- RIGHT PANEL -->
+    <div class="right">
+      <!-- TABLE HEADER -->
+      <div class="table-header">
+        <div><span class="gate-icon"></span>DATE</div>
+        <div><span class="gate-icon"></span>EVENT</div>
+        <div><span class="gate-icon"></span>CLIENT</div>
+        <div><span class="gate-icon"></span>LOCATION</div>
+      </div>
 
-    <!-- CREW FIX BOTTOM -->
-    <div class="crew-section">
-      <div class="crew-title">OUR CREW</div>
-
-      <div class="crew-slider">
-        <img id="crewImage" src="">
-        <div id="crewName" class="crew-name"></div>
+      <!-- SCROLLABLE CONTENT -->
+      <div id="scrollWrapper">
+        <div id="scrollContent"></div>
       </div>
     </div>
   </div>
 
-  <div class="right">
-
-    <div class="table-header">
-      <div><span class="gate-icon"></span>DATE</div>
-      <div><span class="gate-icon"></span>EVENT</div>
-      <div><span class="gate-icon"></span>CLIENT</div>
-      <div><span class="gate-icon"></span>LOCATION</div>
-    </div>
-
-    <div id="scrollWrapper">
-      <div id="scrollContent"></div>
-    </div>
-
-  </div>
-
-</div>
-
 <script>
+// ==================== CONSTANTS & VARIABLES ====================
 const apiURL = "https://script.google.com/macros/s/AKfycbxRLGXgLuH1Wt6isqes6Cp5pWEu-G5yNO93U8sISMLpOBjXpxt-RbI5CpD73xXf0Qar/exec";
 
-/* CREW DATA */
 let crew = [];
+let crewIndex = 0;
 
-async function loadCrew(){
+let y = 0;
+let events = [];
+let highlightEvents = [];
+let highlightIndex = 0;
+
+// ==================== UTILITY FUNCTIONS ====================
+function safe(v) {
+  return v || "-";
+}
+
+function formatDate(v) {
+  let d = new Date(v);
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = d.toLocaleDateString("id-ID", { month: "short" });
+  return `${day} ${month}`;
+}
+
+function getMonthName(v) {
+  let d = new Date(v);
+  return d.toLocaleDateString("id-ID", { month: "long", year: "numeric" });
+}
+
+function parseDate(v) {
+  return v ? new Date(v) : new Date(0);
+}
+
+function isPast(event) {
+  const now = new Date();
+  const end = event.Tanggal_Selesai ? parseDate(event.Tanggal_Selesai) : parseDate(event.Tanggal_Mulai);
+  return end < now;
+}
+
+function isFutureEvent(event) {
+  const now = new Date();
+  const start = parseDate(event.Tanggal_Mulai);
+  return start >= new Date(now.getFullYear(), now.getMonth(), 1);
+}
+
+// ==================== CREW FUNCTIONS ====================
+async function loadCrew() {
   try {
     let allFiles = [];
     let page = 1;
 
-    while(true){
+    while (true) {
       const res = await fetch(`https://api.github.com/repos/mediakitaproductions/foto-tim-mk/contents/?per_page=100&page=${page}`);
-      if(!res.ok){
+      if (!res.ok) {
         throw new Error(`GitHub API error: ${res.status} ${res.statusText}`);
       }
 
       const data = await res.json();
-      if(!Array.isArray(data) || data.length === 0){
+      if (!Array.isArray(data) || data.length === 0) {
         break;
       }
 
       allFiles = allFiles.concat(data);
-      if(data.length < 100){
+      if (data.length < 100) {
         break; // no more pages
       }
       page++;
@@ -386,44 +431,41 @@ async function loadCrew(){
     console.log("Crew auto loaded:", crew);
 
     // INIT CREW
-    if(crew.length > 0){
+    if (crew.length > 0) {
       displayCrew(0);
       setInterval(rotateCrew, 5000);
     }
 
-  } catch(err){
+  } catch (err) {
     console.error("Gagal load crew:", err);
   }
 }
 
-/* DISPLAY CREW WITH ERROR HANDLING */
-function displayCrew(index){
+function displayCrew(index) {
   const img = document.getElementById("crewImage");
   const nameEl = document.getElementById("crewName");
-  
-  if(index >= crew.length) index = 0;
-  
+
+  if (index >= crew.length) index = 0;
+
   const current = crew[index];
   nameEl.innerText = current.name;
-  
+
   img.onerror = () => {
     console.warn(`Foto gagal dimuat: ${current.name}, mencoba gambar berikutnya...`);
     crewIndex = (crewIndex + 1) % crew.length;
     displayCrew(crewIndex);
   };
-  
+
   img.src = current.foto;
 }
 
-let crewIndex = 0;
-
-function rotateCrew(){
+function rotateCrew() {
   const img = document.getElementById("crewImage");
   const nextIndex = (crewIndex + 1) % crew.length;
-  
+
   // Fade out current
   img.classList.add("fade-out");
-  
+
   setTimeout(() => {
     crewIndex = nextIndex;
     displayCrew(crewIndex);
@@ -431,54 +473,19 @@ function rotateCrew(){
   }, 400);
 }
 
-let y = 0;
-let events = [];
-let highlightEvents = [];
-let highlightIndex = 0;
-
-function safe(v){ return v || "-"; }
-
-function formatDate(v){
-  let d = new Date(v);
-  const day = String(d.getDate()).padStart(2, '0');
-  const month = d.toLocaleDateString("id-ID",{month:"short"});
-  return `${day} ${month}`;
-}
-
-function getMonthName(v){
-  let d = new Date(v);
-  return d.toLocaleDateString("id-ID", {month: "long", year: "numeric"});
-}
-
-function parseDate(v){
-  return v ? new Date(v) : new Date(0);
-}
-
-function isPast(event){
-  const now = new Date();
-  const end = event.Tanggal_Selesai ? parseDate(event.Tanggal_Selesai) : parseDate(event.Tanggal_Mulai);
-  return end < now;
-}
-
-function isFutureEvent(event){
-  const now = new Date();
-  const start = parseDate(event.Tanggal_Mulai);
-
-  return start >= new Date(now.getFullYear(), now.getMonth(), 1);
-}
-
-function startScroll(){
+// ==================== EVENT FUNCTIONS ====================
+function startScroll() {
   const el = document.getElementById("scrollContent");
-  function animate(){
+  function animate() {
     y -= 0.35;
     el.style.transform = `translateY(${y}px)`;
-    if(Math.abs(y) >= el.scrollHeight / 2){ y = 0; }
+    if (Math.abs(y) >= el.scrollHeight / 2) { y = 0; }
     requestAnimationFrame(animate);
   }
   animate();
 }
 
-function renderHighlight(e){
+function renderHighlight(e) {
   return `
     <div class="hl-title">${safe(e.Nama_Event)}</div>
 
@@ -510,12 +517,12 @@ function renderHighlight(e){
   `;
 }
 
-function rotateHighlight(){
+function rotateHighlight() {
   const box = document.getElementById("highlight");
-  if(!highlightEvents.length) return;
+  if (!highlightEvents.length) return;
 
   box.style.opacity = 0;
-  setTimeout(()=>{
+  setTimeout(() => {
     highlightIndex = (highlightIndex + 1) % highlightEvents.length;
     box.innerHTML = renderHighlight(highlightEvents[highlightIndex]);
     box.style.opacity = 1;
@@ -527,7 +534,7 @@ function generateTableHTML(events) {
   let grouped = {};
   events.forEach(event => {
     let month = getMonthName(event.Tanggal_Mulai);
-    if(!grouped[month]) grouped[month] = [];
+    if (!grouped[month]) grouped[month] = [];
     grouped[month].push(event);
   });
 
@@ -535,7 +542,7 @@ function generateTableHTML(events) {
     month,
     events: grouped[month],
     minDate: Math.min(...grouped[month].map(e => parseDate(e.Tanggal_Mulai)))
-  })).sort((a,b) => a.minDate - b.minDate);
+  })).sort((a, b) => a.minDate - b.minDate);
 
   let html = "";
   monthList.forEach(group => {
@@ -553,15 +560,16 @@ function generateTableHTML(events) {
   return html;
 }
 
-async function loadData(){
+// ==================== MAIN FUNCTIONS ====================
+async function loadData() {
   const res = await fetch(apiURL);
   const data = await res.json();
 
-  events = data.sort((a,b)=> parseDate(a.Tanggal_Mulai)-parseDate(b.Tanggal_Mulai));
+  events = data.sort((a, b) => parseDate(a.Tanggal_Mulai) - parseDate(b.Tanggal_Mulai));
 
   highlightEvents = events.filter(e => !isPast(e));
 
-  if(highlightEvents.length > 0){
+  if (highlightEvents.length > 0) {
     document.getElementById("highlight").innerHTML = renderHighlight(highlightEvents[0]);
   } else {
     document.getElementById("highlight").innerHTML = "<div class='hl-title'>Tidak ada event bulan ini & depan</div>";
@@ -575,30 +583,24 @@ async function loadData(){
   setInterval(rotateHighlight, 15000);
 }
 
-setInterval(()=>{
-  document.getElementById("clock").innerText = new Date().toLocaleTimeString();
-},1000);
-
-loadData();
-loadCrew();
-/* AUTO REFRESH DATA */
-setInterval(async () => {
+// ==================== AUTO REFRESH FUNCTIONS ====================
+async function refreshData() {
   try {
     console.log("Update data...");
 
     const res = await fetch(apiURL);
     const data = await res.json();
 
-    events = data.sort((a,b)=> parseDate(a.Tanggal_Mulai)-parseDate(b.Tanggal_Mulai));
+    events = data.sort((a, b) => parseDate(a.Tanggal_Mulai) - parseDate(b.Tanggal_Mulai));
 
     // UPDATE HIGHLIGHT (HALUS)
     const box = document.getElementById("highlight");
     box.style.opacity = 0;
 
-    setTimeout(()=>{
+    setTimeout(() => {
       highlightEvents = events.filter(e => !isPast(e));
       if (highlightIndex >= highlightEvents.length) highlightIndex = 0;
-      if(highlightEvents.length > 0){
+      if (highlightEvents.length > 0) {
         box.innerHTML = renderHighlight(highlightEvents[highlightIndex]);
       } else {
         box.innerHTML = "<div class='hl-title'>Tidak ada event bulan ini & depan</div>";
@@ -614,8 +616,20 @@ setInterval(async () => {
   } catch (err) {
     console.error("Gagal update:", err);
   }
+}
 
-}, 30000); // 30 detik
+// ==================== INITIALIZATION ====================
+// Clock update
+setInterval(() => {
+  document.getElementById("clock").innerText = new Date().toLocaleTimeString();
+}, 1000);
+
+// Load initial data
+loadData();
+loadCrew();
+
+// Auto refresh every 30 seconds
+setInterval(refreshData, 30000);
 </script>
 
 </body>
