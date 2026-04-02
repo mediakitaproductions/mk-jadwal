@@ -204,6 +204,33 @@ header {
   color: #00aa00;
 }
 
+.row.active {
+  background: rgba(255,122,0,0.12) !important;
+  border-left: 4px solid #ff7a00;
+
+  transform: scale(1.05);
+  z-index: 2;
+
+  box-shadow: 0 0 12px rgba(255,122,0,0.4);
+
+  transition: all 0.4s ease;
+}
+
+/* pulse halus */
+@keyframes pulseRow {
+  0%   { box-shadow: 0 0 6px rgba(255,122,0,0.3); }
+  50%  { box-shadow: 0 0 18px rgba(255,122,0,0.6); }
+  100% { box-shadow: 0 0 6px rgba(255,122,0,0.3); }
+}
+
+.row.active {
+  animation: pulseRow 2s infinite;
+}
+
+.row {
+  will-change: transform;
+}
+
 /* MONTH SEPARATOR */
 .month {
   padding: 8px 16px;
@@ -525,11 +552,18 @@ function rotateHighlight() {
   if (!highlightEvents.length) return;
 
   box.style.opacity = 0;
+
   setTimeout(() => {
     highlightIndex = (highlightIndex + 1) % highlightEvents.length;
-    box.innerHTML = renderHighlight(highlightEvents[highlightIndex]);
+    const current = highlightEvents[highlightIndex];
+
+    box.innerHTML = renderHighlight(current);
     box.style.opacity = 1;
-  }, 500);
+
+    // 🔥 SYNC KE TABLE
+    syncHighlightToTable(current.Nama_Event);
+
+  }, 400);
 }
 
 function generateTableHTML(events) {
@@ -552,7 +586,7 @@ function generateTableHTML(events) {
     html += `<div class="month">${group.month}</div>`;
     group.events.forEach(row => {
       html += `
-      <div class="row ${isPast(row) ? 'past-row' : ''}">
+      <div class="row ${isPast(row) ? 'past-row' : ''}" data-event="${row.Nama_Event}">
         <div>${formatDate(row.Tanggal_Mulai)}</div>
         <div>${safe(row.Nama_Event)}</div>
         <div>${safe(row.Client_ID)}</div>
@@ -562,6 +596,28 @@ function generateTableHTML(events) {
   });
   return html;
 }
+
+function decodeText(element, finalText) {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+  let iterations = 0;
+
+  const interval = setInterval(() => {
+    element.innerText = finalText
+      .split("")
+      .map((char, index) => {
+        if (index < iterations) return char;
+        return chars[Math.floor(Math.random() * chars.length)];
+      })
+      .join("");
+
+    if (iterations >= finalText.length) {
+      clearInterval(interval);
+    }
+
+    iterations += 1 / 2; // speed decode
+  }, 30);
+}
+
 
 // ==================== MAIN FUNCTIONS ====================
 async function loadData() {
@@ -584,6 +640,33 @@ async function loadData() {
 
   startScroll();
   setInterval(rotateHighlight, 15000);
+}
+
+function syncHighlightToTable(eventName) {
+  const rows = document.querySelectorAll(".row");
+
+  rows.forEach(row => {
+    if (row.dataset.event === eventName) {
+
+      row.classList.remove("active");
+
+      setTimeout(() => {
+        row.classList.add("active");
+
+        // 🔥 APPLY DECODE KE SEMUA CELL
+        const cells = row.querySelectorAll("div");
+
+        cells.forEach(cell => {
+          const original = cell.innerText;
+          decodeText(cell, original);
+        });
+
+      }, 50);
+
+    } else {
+      row.classList.remove("active");
+    }
+  });
 }
 
 // ==================== AUTO REFRESH FUNCTIONS ====================
