@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>MEDIA KITA TV</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+<style>
+/* ==================== BASE STYLES ==================== */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #050505;
+  color: #eaeaea;
+  font-family: 'Share Tech Mono', monospace;
+  overflow: hidden;
+  letter-spacing: 1px;
+}
+
+/* ==================== HEADER STYLES ==================== */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 80px;
+  padding: 0 40px;
+  background: #000;
+  border-bottom: 2px solid #ff7a00;
+}
+
+.title {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: #ff7a00;
+  text-transform: uppercase;
+}
+
+#clock {
+  font-size: 22px;
+  color: #ffaa33;
+}
+
+/* ==================== LAYOUT STYLES ==================== */
+.main {
+  display: flex;
+  height: calc(100vh - 80px);
+}
+
+/* LEFT PANEL */
+.left {
+  width: 28%;
+  min-width: 300px;
+  max-width: 420px;
+  padding: 20px;
+  border-right: 1px solid #222;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 100%;
+}
+
+.highlight-title {
+  font-size: 24px;
+  color: #ff7a00;
+  margin-bottom: 20px;
+}
+
+.highlight-box {
+  padding: 22px;
+  background: #000;
+  border: 1px solid #ff7a00;
+  font-size: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: all 0.6s ease;
+}
+
+/* RIGHT PANEL */
+.right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ==================== TABLE STYLES ==================== */
+/* GRID LAYOUT */
+.table-header,
+.row {
+  display: grid;
+  grid-template-columns: 100px 1.8fr 1.7fr 1.6fr;
+}
+
+/* HEADER TABLE */
+.table-header {
+  height: 50px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #ff7a00;
+  background: #111;
+  letter-spacing: 1px;
+}
+
+.gate-icon {
+  width: 3px;
+  height: 20px;
+  background: linear-gradient(to bottom, #ff7a00, #ffaa33);
+  margin-right: 12px;
+  display: inline-block;
+}
+
+.table-header div,
+.row div {
+  justify-content: flex-start;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+}
+
+.table-header div:not(:last-child)::after,
+.row div:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 15%;
+  height: 70%;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, rgba(255,122,0,0.4), transparent);
+}
+
+.table-header div:nth-child(2),
+.row div:nth-child(2) {
+  padding-left: 4px;
+}
+
+/* SCROLL CONTAINER */
+#scrollWrapper {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+#scrollContent {
+  position: absolute;
+  width: 100%;
+}
+
+/* ROW STYLES */
+.row {
+  height: 52px;
+  font-size: 24px;
+  text-transform: uppercase;
+  background-color: #050505;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.12) 1px, transparent 1px);
+  background-size: 3px 3px;
+  box-shadow: inset 0 0 8px rgba(255,122,0,0.15);
+}
+
+.row div {
+  letter-spacing: 0.3px;
+  border-right: 1px solid rgba(255,122,0,0.2);
+}
+
+.row div:last-child {
+  border-right: none;
+}
+
+.row:nth-child(odd) {
+  background-color: #050505;
+}
+
+.row:nth-child(even) {
+  background-color: #0a0a0a;
+}
+
+.row div:nth-child(2),
+.row div:nth-child(4) {
+  color: #ff7a00;
+}
+
+.past-row {
+  background-color: rgba(0, 50, 0, 0.2) !important;
+  color: #00aa00;
+}
+
+.past-row div:nth-child(2),
+.past-row div:nth-child(4) {
+  color: #00aa00;
+}
+
+.row.active {
+  background: rgba(255,122,0,0.12) !important;
+  border-left: 4px solid #ff7a00;
+
+  animation: smoothBlink 1.2s ease;
+}
+
+/* glow halus + fade */
+@keyframes smoothBlink {
+  0% {
+    background: rgba(255,122,0,0.05);
+    box-shadow: 0 0 0px rgba(255,122,0,0);
+  }
+
+  50% {
+    background: rgba(255,122,0,0.18);
+    box-shadow: 0 0 14px rgba(255,122,0,0.35);
+  }
+
+  100% {
+    background: rgba(255,122,0,0.12);
+    box-shadow: 0 0 6px rgba(255,122,0,0.2);
+  }
+}
+
+.row.active {
+  animation: smoothBlink 1.2s ease;
+}
+
+.row {
+  will-change: transform;
+}
+
+.row {
+  will-change: background, box-shadow;
+}
+
+/* MONTH SEPARATOR */
+.month {
+  padding: 8px 16px;
+  font-size: 18px;
+  color: #ff7a00;
+  background: #0a0a0a;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* ==================== HIGHLIGHT STYLES ==================== */
+.hl-title {
+  font-size: 20px;
+  color: #ffaa33;
+  font-weight: 700;
+}
+
+.hl-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.hl-list div {
+  display: flex;
+  gap: 10px;
+}
+
+.hl-icon {
+  width: 20px;
+  color: #ff7a00;
+}
+
+/* ==================== CREW STYLES ==================== */
+.crew-section {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+}
+
+.crew-title {
+  font-size: 16px;
+  color: #ff7a00;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.crew-slider {
+  margin-top: 10px;
+  border: 1px solid #ff7a00;
+  background: #000;
+  aspect-ratio: 3 / 4;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.crew-slider img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  transition: opacity 0.8s ease-in-out;
+}
+
+/* ===== NETFLIX STYLE CREW ===== */
+.crew-slider {
+  perspective: 1000px;
+}
+
+.crew-slider img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+
+  transform: scale(1);
+  opacity: 1;
+
+  transition: 
+    opacity 0.6s ease,
+    transform 1.2s ease;
+}
+
+/* saat keluar */
+.crew-slider img.fade-out {
+  opacity: 0;
+  transform: scale(1.08);
+}
+
+/* saat masuk */
+.crew-slider img.fade-in {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* subtle light sweep */
+.crew-slider::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.08),
+    transparent
+  );
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* aktif saat transisi */
+.crew-slider.active::before {
+  animation: lightSweep 1s ease;
+}
+
+@keyframes lightSweep {
+  0% { transform: translateX(-100%); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateX(100%); opacity: 0; }
+}
+
+.crew-slider img {
+  will-change: transform, opacity;
+}
+
+.crew-name {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffaa33;
+  border-top: 1px solid #ff7a00;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.crew-slider::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 15px rgba(255,122,0,0.15);
+}
+
+.crew-name {
+  display: none;
+}
+.fade-out {
+  opacity: 0;
+}
+</style>
+</head>
+
+<body>
+  <!-- ==================== HEADER ==================== -->
+  <header>
+    <div style="display:flex; align-items:center; gap:14px;">
+      <img src="https://raw.githubusercontent.com/mediakitaproductions/imageapp/555c0fffa480ce0dc7d5f422ddd117123511b742/mkp-logo-white-title.png" style="height:34px;">
+      <div class="title">MEDIA KITA SCHEDULE</div>
+    </div>
+    <div id="clock"></div>
+  </header>
+
+  <!-- ==================== MAIN LAYOUT ==================== -->
+  <div class="main">
+    <!-- LEFT PANEL -->
+    <div class="left">
+      <div class="highlight-title">EVENT TERDEKAT</div>
+      <div id="highlight" class="highlight-box"></div>
+
+      <!-- CREW SECTION -->
+      <div class="crew-section">
+        <div class="crew-title">OUR CREW</div>
+        <div class="crew-slider">
+          <img id="crewImage" src="">
+          <div id="crewName" class="crew-name"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right">
+      <!-- TABLE HEADER -->
+      <div class="table-header">
+        <div><span class="gate-icon"></span>DATE</div>
+        <div><span class="gate-icon"></span>EVENT</div>
+        <div><span class="gate-icon"></span>CLIENT</div>
+        <div><span class="gate-icon"></span>LOCATION</div>
+      </div>
+
+      <!-- SCROLLABLE CONTENT -->
+      <div id="scrollWrapper">
+        <div id="scrollContent"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+// ==================== CONSTANTS & VARIABLES ====================
+const apiURL = "https://script.google.com/macros/s/AKfycbxRLGXgLuH1Wt6isqes6Cp5pWEu-G5yNO93U8sISMLpOBjXpxt-RbI5CpD73xXf0Qar/exec";
+
+let crew = [];
+let crewIndex = 0;
+
+let y = 0;
+let events = [];
+let highlightEvents = [];
+let highlightIndex = 0;
+
+// ==================== UTILITY FUNCTIONS ====================
+function safe(v) {
+  return v || "-";
+}
+
+function formatDate(v) {
+  let d = new Date(v);
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = d.toLocaleDateString("id-ID", { month: "short" });
+  return `${day} ${month}`;
+}
+
+function getMonthName(v) {
+  let d = new Date(v);
+  return d.toLocaleDateString("id-ID", { month: "long", year: "numeric" });
+}
+
+function parseDate(v) {
+  return v ? new Date(v) : new Date(0);
+}
+
+function isPast(event) {
+  const now = new Date();
+  const end = event.Tanggal_Selesai ? parseDate(event.Tanggal_Selesai) : parseDate(event.Tanggal_Mulai);
+  return end < now;
+}
+
+function isFutureEvent(event) {
+  const now = new Date();
+  const start = parseDate(event.Tanggal_Mulai);
+  return start >= new Date(now.getFullYear(), now.getMonth(), 1);
+}
+
+// ==================== CREW FUNCTIONS ====================
+async function loadCrew() {
+  try {
+    let allFiles = [];
+    let page = 1;
+
+    while (true) {
+      const res = await fetch(`https://api.github.com/repos/mediakitaproductions/foto-tim-mk/contents/?per_page=100&page=${page}`);
+      if (!res.ok) {
+        throw new Error(`GitHub API error: ${res.status} ${res.statusText}`);
+      }
+
+      const data = await res.json();
+      if (!Array.isArray(data) || data.length === 0) {
+        break;
+      }
+
+      allFiles = allFiles.concat(data);
+      if (data.length < 100) {
+        break; // no more pages
+      }
+      page++;
+    }
+
+    crew = allFiles
+      .filter(file => file.name && file.name.toLowerCase().endsWith('.png'))
+      .map(file => ({
+        name: file.name.replace(/\.png$/i, '').toUpperCase(),
+        foto: file.download_url
+      }));
+
+    // Shuffle crew for random order
+    crew.sort(() => Math.random() - 0.5);
+
+    console.log("Crew auto loaded:", crew);
+
+    // INIT CREW
+    if (crew.length > 0) {
+      crewIndex = 0;
+displayCrew(crewIndex);
+setInterval(rotateCrew, 5000);
+    }
+
+  } catch (err) {
+    console.error("Gagal load crew:", err);
+  }
+}
+
+function displayCrew(index) {
+  const img = document.getElementById("crewImage");
+  const nameEl = document.getElementById("crewName");
+
+  if (index >= crew.length) index = 0;
+
+  const current = crew[index];
+  nameEl.innerText = current.name;
+
+  img.onerror = () => {
+    console.warn(`Foto gagal dimuat: ${current.name}, mencoba gambar berikutnya...`);
+    crewIndex = (crewIndex + 1) % crew.length;
+    displayCrew(crewIndex);
+  };
+
+  img.src = current.foto;
+}
+
+function rotateCrew() {
+  const img = document.getElementById("crewImage");
+  const slider = document.querySelector(".crew-slider");
+
+  if (!crew.length) return;
+
+  const nextIndex = (crewIndex + 1) % crew.length;
+
+  // reset dulu biar aman
+  img.classList.remove("fade-in", "fade-out");
+
+  // paksa reflow (penting!)
+  void img.offsetWidth;
+
+  // animasi keluar
+  img.classList.add("fade-out");
+  slider.classList.add("active");
+
+  setTimeout(() => {
+    crewIndex = nextIndex;
+
+    const current = crew[crewIndex];
+
+    // update gambar langsung (lebih stabil)
+    img.src = current.foto;
+
+    // animasi masuk
+    img.classList.remove("fade-out");
+    img.classList.add("fade-in");
+
+    // reset class
+    setTimeout(() => {
+      img.classList.remove("fade-in");
+      slider.classList.remove("active");
+    }, 700);
+
+  }, 400);
+}
+
+// ==================== EVENT FUNCTIONS ====================
+function startScroll() {
+  const el = document.getElementById("scrollContent");
+  function animate() {
+    y -= 0.35;
+    el.style.transform = `translateY(${y}px)`;
+    if (Math.abs(y) >= el.scrollHeight / 2) { y = 0; }
+    requestAnimationFrame(animate);
+  }
+  animate();
+}
+
+function renderHighlight(e) {
+  return `
+    <div class="hl-title">${safe(e.Nama_Event)}</div>
+
+    <div class="hl-list">
+      <div><span class="hl-icon">🏢</span>${safe(e.Client_ID)}</div>
+      <div><span class="hl-icon">📍</span>${safe(e.Lokasi)}</div>
+
+      <div><span class="hl-icon">📅</span>
+        ${formatDate(e.Tanggal_Mulai)}
+        ${e.Tanggal_Selesai ? " - " + formatDate(e.Tanggal_Selesai) : ""}
+      </div>
+
+      <div><span class="hl-icon">👤</span>${safe(e.PIC)}</div>
+
+      <div><span class="hl-icon">📡</span>${safe(e.Status_Event)}</div>
+
+      ${e.Catatan ? `
+        <div class="wrap">
+          <span class="hl-icon">📝</span>${e.Catatan}
+        </div>
+      ` : ""}
+
+      ${e.KEBUTUHAN ? `
+        <div class="wrap">
+          <span class="hl-icon">⚙️</span>${e.KEBUTUHAN}
+        </div>
+      ` : ""}
+    </div>
+  `;
+}
+
+function rotateHighlight() {
+  const box = document.getElementById("highlight");
+  if (!highlightEvents.length) return;
+
+  box.style.opacity = 0;
+
+  setTimeout(() => {
+    highlightIndex = (highlightIndex + 1) % highlightEvents.length;
+    const current = highlightEvents[highlightIndex];
+
+    box.innerHTML = renderHighlight(current);
+    box.style.opacity = 1;
+
+    // 🔥 SYNC KE TABLE
+    syncHighlightToTable(current.Nama_Event);
+
+  }, 400);
+}
+
+function generateTableHTML(events) {
+  // Group events by month
+  let grouped = {};
+  events.forEach(event => {
+    let month = getMonthName(event.Tanggal_Mulai);
+    if (!grouped[month]) grouped[month] = [];
+    grouped[month].push(event);
+  });
+
+  let monthList = Object.keys(grouped).map(month => ({
+    month,
+    events: grouped[month],
+    minDate: Math.min(...grouped[month].map(e => parseDate(e.Tanggal_Mulai)))
+  })).sort((a, b) => a.minDate - b.minDate);
+
+  let html = "";
+  monthList.forEach(group => {
+    html += `<div class="month">${group.month}</div>`;
+    group.events.forEach(row => {
+      html += `
+      <div class="row ${isPast(row) ? 'past-row' : ''}" data-event="${row.Nama_Event}">
+        <div>${formatDate(row.Tanggal_Mulai)}</div>
+        <div>${safe(row.Nama_Event)}</div>
+        <div>${safe(row.Client_ID)}</div>
+        <div>${safe(row.Lokasi)}</div>
+      </div>`;
+    });
+  });
+  return html;
+}
+
+function decodeText(element, finalText) {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+  let iterations = 0;
+
+  const interval = setInterval(() => {
+    element.innerText = finalText
+      .split("")
+      .map((char, index) => {
+        if (index < iterations) return char;
+        return chars[Math.floor(Math.random() * chars.length)];
+      })
+      .join("");
+
+    if (iterations >= finalText.length) {
+      clearInterval(interval);
+    }
+
+    iterations += 1 / 2; // speed decode
+  }, 30);
+}
+
+
+// ==================== MAIN FUNCTIONS ====================
+async function loadData() {
+  const res = await fetch(apiURL);
+  const data = await res.json();
+
+  events = data.sort((a, b) => parseDate(a.Tanggal_Mulai) - parseDate(b.Tanggal_Mulai));
+
+  highlightEvents = events.filter(e => !isPast(e));
+
+  if (highlightEvents.length > 0) {
+    document.getElementById("highlight").innerHTML = renderHighlight(highlightEvents[0]);
+  } else {
+    document.getElementById("highlight").innerHTML = "<div class='hl-title'>Tidak ada event bulan ini & depan</div>";
+  }
+
+  let html = generateTableHTML(events);
+
+  document.getElementById("scrollContent").innerHTML = html + html;
+
+  startScroll();
+  setInterval(rotateHighlight, 15000);
+}
+
+function syncHighlightToTable(eventName) {
+  const rows = document.querySelectorAll(".row");
+
+  rows.forEach(row => {
+    if (row.dataset.event === eventName) {
+
+      // reset animasi
+      row.classList.remove("active");
+
+      void row.offsetWidth; // force reflow (penting!)
+
+      row.classList.add("active");
+
+      // 🔥 decode tetap jalan (kalau kamu pakai)
+      const eventCell = row.children[1];
+      const original = eventCell.innerText;
+      decodeText(eventCell, original);
+
+    } else {
+      row.classList.remove("active");
+    }
+  });
+}
+
+// ==================== AUTO REFRESH FUNCTIONS ====================
+async function refreshData() {
+  try {
+    console.log("Update data...");
+
+    const res = await fetch(apiURL);
+    const data = await res.json();
+
+    events = data.sort((a, b) => parseDate(a.Tanggal_Mulai) - parseDate(b.Tanggal_Mulai));
+
+    // UPDATE HIGHLIGHT (HALUS)
+    const box = document.getElementById("highlight");
+    box.style.opacity = 0;
+
+    setTimeout(() => {
+      highlightEvents = events.filter(e => !isPast(e));
+      if (highlightIndex >= highlightEvents.length) highlightIndex = 0;
+      if (highlightEvents.length > 0) {
+        box.innerHTML = renderHighlight(highlightEvents[highlightIndex]);
+      } else {
+        box.innerHTML = "<div class='hl-title'>Tidak ada event bulan ini & depan</div>";
+      }
+      box.style.opacity = 1;
+    }, 400);
+
+    // UPDATE TABLE
+    let html = generateTableHTML(events);
+
+    document.getElementById("scrollContent").innerHTML = html + html;
+
+  } catch (err) {
+    console.error("Gagal update:", err);
+  }
+}
+
+// ==================== INITIALIZATION ====================
+// Clock update
+setInterval(() => {
+  document.getElementById("clock").innerText = new Date().toLocaleTimeString();
+}, 1000);
+
+// Load initial data
+loadData();
+loadCrew();
+
+// Auto refresh every 30 seconds
+setInterval(refreshData, 30000);
+</script>
+
+</body>
+</html>
