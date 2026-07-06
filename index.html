@@ -315,6 +315,14 @@
         text-transform: uppercase;
       }
 
+      .highlight-box .hl-kebutuhan-val {
+        font-size: 16px;
+        color: #ffe0a0;
+        letter-spacing: 0.5px;
+        font-weight: 500;
+        margin-top: 2px;
+      }
+
       /* RIGHT PANEL */
       .right {
         flex: 1;
@@ -1081,6 +1089,7 @@
     <div>
       <div class="hl-event-title">${safe(e.Nama_Event)}</div>
       <div class="hl-event-subtitle">${safe(e.Client_ID)}</div>
+      <div class="hl-kebutuhan-val">${safe(e.KEBUTUHAN)}</div>
     </div>
     <div>
       <div class="hl-time-val">${safe(e.PIC)}</div>
